@@ -148,25 +148,66 @@ public class DepartmentsController : ControllerBase
                         )
                     ).ToList();
 
-                foreach(var job in reception.requiredPersonnel)
+                // предположим что у нас отрезки времени это пол часа
+                for (TimeOnly time = schedule.startOfWork; time < schedule.endOfWork; time = time.Add(new TimeSpan(0, 30, 0)))
                 {
-                    var matchingWorker = workingWorkers.FirstOrDefault(w => w.jobTitle == job);
-                    if (matchingWorker != null)
-                        reception.personnel.Add(matchingWorker);
-                }
-
-                if (reception.personnel.Count == reception.requiredPersonnel.Count)
-                {
-                    reception.date = targetDate;
-                    reception.startTime = schedule.startOfWork;
-                    await _receptionRepo.UpdateAsync(reception);
-                    scheduled.Add(reception);
-                    break;
-                }
+                    List<Worker> freeWorkers = workingWorkers.Where(
+                        w => !receptions.Any(
+                            r =>
+                            r.personnel.Contains(w) &&
+                            r.date == targetDate &&
+                            r.startTime < time &&
+                            r.endTime > time &&
+                            r.startTime < time.Add(reception.time) &&
+                            r.endTime > time.Add(reception.time)
+                            )
+                        ).ToList();
+                    foreach(JobTitle job in reception.requiredPersonnel)
+                    {
+                        Worker ourWorker = freeWorkers.FirstOrDefault(w => w.jobTitle == job);
+                        if (ourWorker == null)
+                            break;
+                        reception.personnel.Add(ourWorker);
+                    }
+                    if (reception.personnel.Count == reception.requiredPersonnel.Count)
+                    {
+                        reception.date = targetDate;
+                        reception.startTime = time;
+                        await _receptionRepo.UpdateAsync(reception);
+                        scheduled.Add(reception);
+                        break;
+                    }
+                    reception.personnel.Clear();
+                }                
             }
         }
 
         await _receptionRepo.SaveAsync();
         return Ok(scheduled);
+    }
+
+    [HttpGet("get-schedule-for-period")]
+    [AuthorizeWithSid]
+    public async Task<IActionResult> GetScheduleForPeriod(
+    [FromQuery] int departmentId,
+    [FromQuery] DateOnly start,
+    [FromQuery] DateOnly end)
+    {
+        var department = await _repo.GetByIdAsync(departmentId);
+        if (department == null)
+            return NotFound(new { error = "Department not found" });
+
+        var receptions = await _receptionRepo.GetAllAsync();
+
+        var filtered = receptions
+            .Where(r =>
+                r.department != null &&
+                r.department.id == departmentId &&
+                r.date.HasValue &&
+                r.date.Value >= start &&
+                r.date.Value <= end)
+            .ToList();
+
+        return Ok(filtered);
     }
 }

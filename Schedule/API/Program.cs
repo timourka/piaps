@@ -51,6 +51,7 @@ builder.Services.AddScoped<IRepository<Reception>, GenericRepository<Reception>>
 builder.Services.AddScoped<IRepository<Department>, GenericRepository<Department>>();
 builder.Services.AddScoped<IRepository<Holiday>, GenericRepository<Holiday>>();
 builder.Services.AddScoped<IRepository<JobTitle>, GenericRepository<JobTitle>>();
+builder.Services.AddScoped<DataSeeder>();
 
 var app = builder.Build();
 
@@ -66,5 +67,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+    await seeder.SeedAsync();
+}
 
 app.Run();

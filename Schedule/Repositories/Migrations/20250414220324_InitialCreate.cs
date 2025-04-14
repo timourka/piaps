@@ -45,8 +45,10 @@ namespace Repositories.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    departmentid = table.Column<int>(type: "integer", nullable: false)
+                    time = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    departmentid = table.Column<int>(type: "integer", nullable: false),
+                    date = table.Column<DateOnly>(type: "date", nullable: true),
+                    startTime = table.Column<TimeOnly>(type: "time without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,6 +67,8 @@ namespace Repositories.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    startOfWork = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    endOfWork = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     isWorking = table.Column<bool>(type: "boolean", nullable: false),
                     Departmentid = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -107,47 +111,28 @@ namespace Repositories.Migrations
                     login = table.Column<string>(type: "text", nullable: false),
                     password = table.Column<string>(type: "text", nullable: false),
                     jobTitleid = table.Column<int>(type: "integer", nullable: false),
-                    departmentid = table.Column<int>(type: "integer", nullable: false)
+                    Departmentid = table.Column<int>(type: "integer", nullable: true),
+                    Receptionid = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Workers", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Workers_Departments_departmentid",
-                        column: x => x.departmentid,
+                        name: "FK_Workers_Departments_Departmentid",
+                        column: x => x.Departmentid,
                         principalTable: "Departments",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Workers_JobTitles_jobTitleid",
                         column: x => x.jobTitleid,
                         principalTable: "JobTitles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReceptionWorker",
-                columns: table => new
-                {
-                    personnelid = table.Column<int>(type: "integer", nullable: false),
-                    upcomingReceptionsid = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReceptionWorker", x => new { x.personnelid, x.upcomingReceptionsid });
                     table.ForeignKey(
-                        name: "FK_ReceptionWorker_Receptions_upcomingReceptionsid",
-                        column: x => x.upcomingReceptionsid,
+                        name: "FK_Workers_Receptions_Receptionid",
+                        column: x => x.Receptionid,
                         principalTable: "Receptions",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ReceptionWorker_Workers_personnelid",
-                        column: x => x.personnelid,
-                        principalTable: "Workers",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -198,11 +183,6 @@ namespace Repositories.Migrations
                 column: "Receptionid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceptionWorker_upcomingReceptionsid",
-                table: "ReceptionWorker",
-                column: "upcomingReceptionsid");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Receptions_departmentid",
                 table: "Receptions",
                 column: "departmentid");
@@ -218,9 +198,14 @@ namespace Repositories.Migrations
                 column: "Departmentid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Workers_departmentid",
+                name: "IX_Workers_Departmentid",
                 table: "Workers",
-                column: "departmentid");
+                column: "Departmentid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workers_Receptionid",
+                table: "Workers",
+                column: "Receptionid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workers_jobTitleid",
@@ -236,9 +221,6 @@ namespace Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "Holidays");
-
-            migrationBuilder.DropTable(
-                name: "ReceptionWorker");
 
             migrationBuilder.DropTable(
                 name: "WorkSchedule4Day");

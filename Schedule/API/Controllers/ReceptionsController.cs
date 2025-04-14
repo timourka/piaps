@@ -17,6 +17,8 @@ public class ReceptionsController : ControllerBase
         _repoWorker = repoWorker;
         _repoJobTitle = repoJobTitle;
         _repoDepartment = repoDepartment;
+
+        
     }
 
     [HttpGet("get-all")]

@@ -12,8 +12,8 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250413230917_Create3")]
-    partial class Create3
+    [Migration("20250414220324_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,20 +113,17 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<DateOnly>("date")
+                    b.Property<DateOnly?>("date")
                         .HasColumnType("date");
 
                     b.Property<int>("departmentid")
                         .HasColumnType("integer");
 
-                    b.Property<TimeOnly>("endTime")
+                    b.Property<TimeOnly?>("startTime")
                         .HasColumnType("time without time zone");
 
-                    b.Property<TimeOnly>("startTime")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<DateTime>("time")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeSpan>("time")
+                        .HasColumnType("interval");
 
                     b.HasKey("id");
 
@@ -164,8 +161,14 @@ namespace Repositories.Migrations
                     b.Property<int?>("Departmentid")
                         .HasColumnType("integer");
 
+                    b.Property<TimeOnly>("endOfWork")
+                        .HasColumnType("time without time zone");
+
                     b.Property<bool>("isWorking")
                         .HasColumnType("boolean");
+
+                    b.Property<TimeOnly>("startOfWork")
+                        .HasColumnType("time without time zone");
 
                     b.HasKey("id");
 
