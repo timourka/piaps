@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,19 @@ namespace Repositories.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Holidays", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobTitles",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobTitles", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,22 +96,27 @@ namespace Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobTitles",
+                name: "JobTitleReception",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    Receptionid = table.Column<int>(type: "integer", nullable: true)
+                    receptionsid = table.Column<int>(type: "integer", nullable: false),
+                    requiredPersonnelid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JobTitles", x => x.id);
+                    table.PrimaryKey("PK_JobTitleReception", x => new { x.receptionsid, x.requiredPersonnelid });
                     table.ForeignKey(
-                        name: "FK_JobTitles_Receptions_Receptionid",
-                        column: x => x.Receptionid,
+                        name: "FK_JobTitleReception_JobTitles_requiredPersonnelid",
+                        column: x => x.requiredPersonnelid,
+                        principalTable: "JobTitles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobTitleReception_Receptions_receptionsid",
+                        column: x => x.receptionsid,
                         principalTable: "Receptions",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,9 +196,9 @@ namespace Repositories.Migrations
                 column: "Vacationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobTitles_Receptionid",
-                table: "JobTitles",
-                column: "Receptionid");
+                name: "IX_JobTitleReception_requiredPersonnelid",
+                table: "JobTitleReception",
+                column: "requiredPersonnelid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Receptions_departmentid",
@@ -221,6 +239,9 @@ namespace Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "Holidays");
+
+            migrationBuilder.DropTable(
+                name: "JobTitleReception");
 
             migrationBuilder.DropTable(
                 name: "WorkSchedule4Day");

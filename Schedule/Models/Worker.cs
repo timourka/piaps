@@ -11,5 +11,7 @@ namespace Models
         public string password { get; set; }
         public JobTitle jobTitle { get; set; }
         public List<Vacation> vacations { get; set; }
+
+        [JsonIgnore] public List<Department> departments { get; set; }
     }
 }

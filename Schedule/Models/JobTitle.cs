@@ -1,4 +1,5 @@
 ﻿using Models.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -6,5 +7,7 @@ namespace Models
     {
         public int id { get; set; }
         public string name { get; set; }
+
+        [JsonIgnore] public List<Reception> receptions { get; set; }
     }
 }

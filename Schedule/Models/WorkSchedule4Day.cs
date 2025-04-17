@@ -1,4 +1,5 @@
 ﻿using Models.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -8,5 +9,8 @@ namespace Models
         public TimeOnly startOfWork { get; set; }
         public TimeOnly endOfWork { get; set; }
         public bool isWorking { get; set; }
+
+        public int DepartmentId { get; set; }            // 🔥 Добавлено
+        [JsonIgnore] public Department Department { get; set; }       // 🔥 Добавлено
     }
 }

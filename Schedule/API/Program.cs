@@ -46,11 +46,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Пример регистрации репозитория
-builder.Services.AddScoped<IRepository<Worker>, GenericRepository<Worker>>();
-builder.Services.AddScoped<IRepository<Reception>, GenericRepository<Reception>>();
-builder.Services.AddScoped<IRepository<Department>, GenericRepository<Department>>();
-builder.Services.AddScoped<IRepository<Holiday>, GenericRepository<Holiday>>();
-builder.Services.AddScoped<IRepository<JobTitle>, GenericRepository<JobTitle>>();
+builder.Services.AddScoped<IRepository<Worker>, WorkerRepository>();
+builder.Services.AddScoped<IRepository<Reception>, ReceptionRepository>();
+builder.Services.AddScoped<IRepository<Department>, DepartmentRepository>();
+builder.Services.AddScoped<IRepository<Holiday>, HolidayRepository>();
+builder.Services.AddScoped<IRepository<JobTitle>, JobTitleRepository>();
 builder.Services.AddScoped<DataSeeder>();
 
 var app = builder.Build();

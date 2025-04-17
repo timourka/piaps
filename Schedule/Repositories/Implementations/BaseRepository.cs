@@ -3,31 +3,35 @@ using Repositories.Interfaces;
 
 namespace Repositories.Implementations
 {
-    public class GenericRepository<T> : IRepository<T> where T : class
+    public abstract class BaseRepository<T> : IRepository<T> where T : class
     {
         protected readonly AppDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(AppDbContext context)
+        protected BaseRepository(AppDbContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
+            _dbSet = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
-        public async Task<T> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public abstract Task<IEnumerable<T>> GetAllAsync();
+        public abstract Task<T> GetByIdAsync(int id);
+
         public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
-        public async Task UpdateAsync(T entity)
+
+        public Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(T entity)
+        public Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
+
         public async Task SaveAsync() => await _context.SaveChangesAsync();
     }
+
 }

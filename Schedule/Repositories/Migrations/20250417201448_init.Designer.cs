@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repositories;
@@ -11,9 +12,11 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250417201448_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace Repositories.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("DepartmentWorker", b =>
-                {
-                    b.Property<int>("departmentsid")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("workersid")
-                        .HasColumnType("integer");
-
-                    b.HasKey("departmentsid", "workersid");
-
-                    b.HasIndex("workersid");
-
-                    b.ToTable("DepartmentWorker");
-                });
 
             modelBuilder.Entity("JobTitleReception", b =>
                 {
@@ -60,7 +48,7 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("VacationId")
+                    b.Property<int?>("Vacationid")
                         .HasColumnType("integer");
 
                     b.Property<DateOnly>("date")
@@ -68,7 +56,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("VacationId");
+                    b.HasIndex("Vacationid");
 
                     b.ToTable("DayOff");
                 });
@@ -162,12 +150,12 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("WorkerId")
+                    b.Property<int?>("Workerid")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex("Workerid");
 
                     b.ToTable("Vacation");
                 });
@@ -180,7 +168,7 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("DepartmentId")
+                    b.Property<int?>("Departmentid")
                         .HasColumnType("integer");
 
                     b.Property<TimeOnly>("endOfWork")
@@ -194,7 +182,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("Departmentid");
 
                     b.ToTable("WorkSchedule4Day");
                 });
@@ -206,6 +194,9 @@ namespace Repositories.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Departmentid")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Receptionid")
                         .HasColumnType("integer");
@@ -227,26 +218,13 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("Departmentid");
+
                     b.HasIndex("Receptionid");
 
                     b.HasIndex("jobTitleid");
 
                     b.ToTable("Workers");
-                });
-
-            modelBuilder.Entity("DepartmentWorker", b =>
-                {
-                    b.HasOne("Models.Department", null)
-                        .WithMany()
-                        .HasForeignKey("departmentsid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Worker", null)
-                        .WithMany()
-                        .HasForeignKey("workersid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("JobTitleReception", b =>
@@ -266,13 +244,9 @@ namespace Repositories.Migrations
 
             modelBuilder.Entity("Models.DayOff", b =>
                 {
-                    b.HasOne("Models.Vacation", "Vacation")
+                    b.HasOne("Models.Vacation", null)
                         .WithMany("days")
-                        .HasForeignKey("VacationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vacation");
+                        .HasForeignKey("Vacationid");
                 });
 
             modelBuilder.Entity("Models.Reception", b =>
@@ -288,28 +262,24 @@ namespace Repositories.Migrations
 
             modelBuilder.Entity("Models.Vacation", b =>
                 {
-                    b.HasOne("Models.Worker", "Worker")
+                    b.HasOne("Models.Worker", null)
                         .WithMany("vacations")
-                        .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Worker");
+                        .HasForeignKey("Workerid");
                 });
 
             modelBuilder.Entity("Models.WorkSchedule4Day", b =>
                 {
-                    b.HasOne("Models.Department", "Department")
+                    b.HasOne("Models.Department", null)
                         .WithMany("workSchedules")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
+                        .HasForeignKey("Departmentid");
                 });
 
             modelBuilder.Entity("Models.Worker", b =>
                 {
+                    b.HasOne("Models.Department", null)
+                        .WithMany("workers")
+                        .HasForeignKey("Departmentid");
+
                     b.HasOne("Models.Reception", null)
                         .WithMany("personnel")
                         .HasForeignKey("Receptionid");
@@ -326,6 +296,8 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Models.Department", b =>
                 {
                     b.Navigation("workSchedules");
+
+                    b.Navigation("workers");
                 });
 
             modelBuilder.Entity("Models.Reception", b =>
