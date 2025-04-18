@@ -32,6 +32,26 @@ public class WorkersController : ControllerBase
         return worker is null ? NotFound() : Ok(worker);
     }
 
+    [HttpGet("getByLogin/{login}")]
+    [AuthorizeWithSid]
+    public async Task<IActionResult> GetByLogin(string login)
+    {
+        var sid = HttpContext.Request.Headers["sid"].FirstOrDefault();
+
+        var workers = await _workerRepo.GetAllAsync();
+        if (workers is null)
+            return NotFound();
+
+        var worker = workers.FirstOrDefault(w => w.login == login);
+        if (worker is null)
+            return NotFound();
+
+        if (worker.id != SessionStore.Sessions[sid])
+            return NotFound();
+
+        return worker is null ? NotFound() : Ok(worker);
+    }
+
     [HttpPost("add")]
     [AuthorizeWithSid]
     public async Task<IActionResult> Add([FromBody] Worker worker)
