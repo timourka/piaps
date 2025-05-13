@@ -1,5 +1,6 @@
 ﻿
 using Models.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -7,5 +8,8 @@ namespace Models
     {
         public DateOnly date { get; set; }
         public int id { get; set; }
+
+        public int VacationId { get; set; }
+        [JsonIgnore] public Vacation Vacation { get; set;}
     }
 }

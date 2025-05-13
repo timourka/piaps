@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{D01F2FC9-BABE-42A0-85A8-2651812CBD5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{D01F2FC9-BABE-42A0-85A8-2651812CBD5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{238B44CE-29DD-45EB-A1E0-B4642CBA0F1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{238B44CE-29DD-45EB-A1E0-B4642CBA0F1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{C0DAC84A-B14F-4C61-A17B-5C35F3181D9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{C0DAC84A-B14F-4C61-A17B-5C35F3181D9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesctopSheduleManager", "DesctopSheduleManager\DesctopSheduleManager.csproj", "{B7274455-3F83-4E69-8EEE-EDA74F5E7101}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{C0DAC84A-B14F-4C61-A17B-5C35F3181D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0DAC84A-B14F-4C61-A17B-5C35F3181D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0DAC84A-B14F-4C61-A17B-5C35F3181D9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7274455-3F83-4E69-8EEE-EDA74F5E7101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7274455-3F83-4E69-8EEE-EDA74F5E7101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7274455-3F83-4E69-8EEE-EDA74F5E7101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7274455-3F83-4E69-8EEE-EDA74F5E7101}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

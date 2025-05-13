@@ -116,7 +116,7 @@ public class DepartmentsController : ControllerBase
             return NotFound(new { error = "Department not found" });
 
         var receptions = (await _receptionRepo.GetAllAsync())
-            .Where(r => r.department?.id == departmentId)
+            .Where(r => r.department?.id == departmentId && !r.date.HasValue)
             .ToList();
 
         var holidays = await _holidayRepo.GetAllAsync();
@@ -141,8 +141,8 @@ public class DepartmentsController : ControllerBase
                     continue;
 
                 List<Worker> workingWorkers = allWorkers.Where(
-                    w => !w.vacations.Any(
-                        v => v.days.Any(
+                    w => w.vacations == null || !w.vacations.Any(
+                        v => v != null && v.days.Any(
                             d => d.Equals(targetDate)
                             )
                         )
@@ -178,7 +178,12 @@ public class DepartmentsController : ControllerBase
                         break;
                     }
                     reception.personnel.Clear();
-                }                
+                }
+
+                if (reception.personnel.Count == reception.requiredPersonnel.Count)
+                {
+                    break;
+                }
             }
         }
 

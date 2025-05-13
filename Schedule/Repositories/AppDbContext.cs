@@ -13,10 +13,5 @@ namespace Repositories
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Конфигурация связей (при необходимости)
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }

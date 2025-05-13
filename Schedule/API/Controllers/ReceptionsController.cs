@@ -33,6 +33,29 @@ public class ReceptionsController : ControllerBase
         return item == null ? NotFound() : Ok(item);
     }
 
+    [HttpGet("getByLogin/{login}")]
+    [AuthorizeWithSid]
+    public async Task<IActionResult> GetByLogin(string login)
+    {
+        var sid = HttpContext.Request.Headers["sid"].FirstOrDefault();
+
+        var workers = await _repoWorker.GetAllAsync();
+        if (workers is null)
+            return NotFound();
+
+        var worker = workers.FirstOrDefault(w => w.login == login);
+        if (worker is null)
+            return NotFound();
+
+        if (worker.id != SessionStore.Sessions[sid])
+            return NotFound();
+
+        var receptions = await _repo.GetAllAsync();
+        var filteredReceptions = receptions.Where(r => r.personnel != null && r.personnel.Contains(worker)).ToList();
+
+        return filteredReceptions is null ? NotFound() : Ok(filteredReceptions);
+    }
+
     [HttpPost("add")]
     [AuthorizeWithSid]
     public async Task<IActionResult> Add([FromBody] Reception item)

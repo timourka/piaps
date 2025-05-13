@@ -22,6 +22,36 @@ namespace Repositories.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DepartmentWorker", b =>
+                {
+                    b.Property<int>("departmentsid")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("workersid")
+                        .HasColumnType("integer");
+
+                    b.HasKey("departmentsid", "workersid");
+
+                    b.HasIndex("workersid");
+
+                    b.ToTable("DepartmentWorker");
+                });
+
+            modelBuilder.Entity("JobTitleReception", b =>
+                {
+                    b.Property<int>("receptionsid")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("requiredPersonnelid")
+                        .HasColumnType("integer");
+
+                    b.HasKey("receptionsid", "requiredPersonnelid");
+
+                    b.HasIndex("requiredPersonnelid");
+
+                    b.ToTable("JobTitleReception");
+                });
+
             modelBuilder.Entity("Models.DayOff", b =>
                 {
                     b.Property<int>("id")
@@ -30,7 +60,7 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Vacationid")
+                    b.Property<int>("VacationId")
                         .HasColumnType("integer");
 
                     b.Property<DateOnly>("date")
@@ -38,7 +68,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Vacationid");
+                    b.HasIndex("VacationId");
 
                     b.ToTable("DayOff");
                 });
@@ -88,16 +118,11 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Receptionid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id");
-
-                    b.HasIndex("Receptionid");
 
                     b.ToTable("JobTitles");
                 });
@@ -137,12 +162,12 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Workerid")
+                    b.Property<int>("WorkerId")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
-                    b.HasIndex("Workerid");
+                    b.HasIndex("WorkerId");
 
                     b.ToTable("Vacation");
                 });
@@ -155,7 +180,7 @@ namespace Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Departmentid")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
 
                     b.Property<TimeOnly>("endOfWork")
@@ -169,7 +194,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Departmentid");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("WorkSchedule4Day");
                 });
@@ -181,9 +206,6 @@ namespace Repositories.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<int?>("Departmentid")
-                        .HasColumnType("integer");
 
                     b.Property<int?>("Receptionid")
                         .HasColumnType("integer");
@@ -205,8 +227,6 @@ namespace Repositories.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Departmentid");
-
                     b.HasIndex("Receptionid");
 
                     b.HasIndex("jobTitleid");
@@ -214,18 +234,45 @@ namespace Repositories.Migrations
                     b.ToTable("Workers");
                 });
 
-            modelBuilder.Entity("Models.DayOff", b =>
+            modelBuilder.Entity("DepartmentWorker", b =>
                 {
-                    b.HasOne("Models.Vacation", null)
-                        .WithMany("days")
-                        .HasForeignKey("Vacationid");
+                    b.HasOne("Models.Department", null)
+                        .WithMany()
+                        .HasForeignKey("departmentsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Worker", null)
+                        .WithMany()
+                        .HasForeignKey("workersid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.JobTitle", b =>
+            modelBuilder.Entity("JobTitleReception", b =>
                 {
                     b.HasOne("Models.Reception", null)
-                        .WithMany("requiredPersonnel")
-                        .HasForeignKey("Receptionid");
+                        .WithMany()
+                        .HasForeignKey("receptionsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.JobTitle", null)
+                        .WithMany()
+                        .HasForeignKey("requiredPersonnelid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.DayOff", b =>
+                {
+                    b.HasOne("Models.Vacation", "Vacation")
+                        .WithMany("days")
+                        .HasForeignKey("VacationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vacation");
                 });
 
             modelBuilder.Entity("Models.Reception", b =>
@@ -241,24 +288,28 @@ namespace Repositories.Migrations
 
             modelBuilder.Entity("Models.Vacation", b =>
                 {
-                    b.HasOne("Models.Worker", null)
+                    b.HasOne("Models.Worker", "Worker")
                         .WithMany("vacations")
-                        .HasForeignKey("Workerid");
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("Models.WorkSchedule4Day", b =>
                 {
-                    b.HasOne("Models.Department", null)
+                    b.HasOne("Models.Department", "Department")
                         .WithMany("workSchedules")
-                        .HasForeignKey("Departmentid");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Models.Worker", b =>
                 {
-                    b.HasOne("Models.Department", null)
-                        .WithMany("workers")
-                        .HasForeignKey("Departmentid");
-
                     b.HasOne("Models.Reception", null)
                         .WithMany("personnel")
                         .HasForeignKey("Receptionid");
@@ -275,15 +326,11 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Models.Department", b =>
                 {
                     b.Navigation("workSchedules");
-
-                    b.Navigation("workers");
                 });
 
             modelBuilder.Entity("Models.Reception", b =>
                 {
                     b.Navigation("personnel");
-
-                    b.Navigation("requiredPersonnel");
                 });
 
             modelBuilder.Entity("Models.Vacation", b =>
