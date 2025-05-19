@@ -7,10 +7,6 @@ namespace Models.Models
         private Выходной[] дни;
         public int id;
 
-        private Выходной выходной;
-
-        private Рабочий рабочий;
-
     }
 
 }

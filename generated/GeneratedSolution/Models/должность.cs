@@ -6,8 +6,6 @@ namespace Models.Models
     {
         private string name;
 
-        private Рабочий рабочий;
-
     }
 
 }

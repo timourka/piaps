@@ -13,11 +13,6 @@ namespace Models.Models
         private string login;
         public int id;
 
-        private Приём приём;
-        private Отпуск отпуск;
-
-        private repositories.РабочийRepository рабочийRepository;
-
     }
 
 }
