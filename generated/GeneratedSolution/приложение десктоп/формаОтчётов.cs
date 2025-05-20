@@ -1,6 +1,6 @@
 using System;
 
-namespace приложение десктоп {
+namespace приложение_десктоп {
 	public class ФормаОтчётов : Form  {
 	}
 

@@ -1,25 +1,25 @@
 using System;
 
 namespace Api {
-	public class пїЅпїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ {
-		public Models.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ[] Read(ref string sid) {
+	public class Ведение_должностей : ControllerBase  {
+		public Models.Должность[] Read(ref string sid) {
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public Models.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Read(ref string sid, ref int id) {
+		public Models.Должность Read(ref string sid, ref int id) {
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void Create(ref string sid, ref Models.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) {
+		public void Create(ref string sid, ref Models.Должность должность) {
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void Update(ref string sid, ref int id, ref Models.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) {
+		public void Update(ref string sid, ref int id, ref Models.Должность должность) {
 			throw new System.NotImplementedException("Not implemented");
 		}
 		public void Delete(ref string sid, ref object id_int) {
 			throw new System.NotImplementedException("Not implemented");
 		}
 
-		private repositories.пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅRepository пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅRepository;
-		private пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ;
+		private repositories.ДолжностьRepository должностьRepository;
+		private Логер логер;
 
 	}
 

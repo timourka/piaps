@@ -1,7 +1,7 @@
 using System;
 
 namespace Api {
-	public class Ведение_праздников {
+	public class Ведение_праздников : ControllerBase  {
 		public Models.Праздник[] Read(ref string sid) {
 			throw new System.NotImplementedException("Not implemented");
 		}

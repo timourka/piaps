@@ -1,7 +1,9 @@
 using System;
 
 namespace приложение десктоп {
-	public class ФормаОтчётов : Form  {
+	public class Form {
+		private Логер логер;
+
 	}
 
 }
