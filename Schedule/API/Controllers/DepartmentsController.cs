@@ -156,11 +156,13 @@ public class DepartmentsController : ControllerBase
                             r =>
                             r.personnel.Contains(w) &&
                             r.date == targetDate &&
-                            r.startTime < time &&
-                            r.endTime > time &&
-                            r.startTime < time.Add(reception.time) &&
-                            r.endTime > time.Add(reception.time)
-                            )
+                            (
+                                r.startTime < time &&
+                                r.endTime > time
+                                ||
+                                r.startTime < time.Add(reception.time) &&
+                                r.endTime > time.Add(reception.time)
+                            ))
                         ).ToList();
                     foreach(JobTitle job in reception.requiredPersonnel)
                     {
@@ -174,6 +176,10 @@ public class DepartmentsController : ControllerBase
                         reception.date = targetDate;
                         reception.startTime = time;
                         await _receptionRepo.UpdateAsync(reception);
+                        await _receptionRepo.SaveAsync();
+                        receptions = (await _receptionRepo.GetAllAsync())
+                            .Where(r => r.department?.id == departmentId && !r.date.HasValue)
+                            .ToList();
                         scheduled.Add(reception);
                         break;
                     }
@@ -187,7 +193,6 @@ public class DepartmentsController : ControllerBase
             }
         }
 
-        await _receptionRepo.SaveAsync();
         return Ok(scheduled);
     }
 

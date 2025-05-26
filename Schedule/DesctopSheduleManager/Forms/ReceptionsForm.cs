@@ -122,7 +122,6 @@ namespace DesctopSheduleManager
                     time = TimeSpan.Parse(txtTime.Text),
                     department = new Department { id = (int)cmbDepartment.SelectedValue },
                     requiredPersonnel = _selectedJobTitles,
-                    date = DateOnly.FromDateTime(dtpDate.Value)
                 };
 
                 var response = await _client.PostAsJsonAsync("api/reception/add", newReception);
