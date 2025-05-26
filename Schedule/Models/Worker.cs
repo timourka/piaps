@@ -13,5 +13,6 @@ namespace Models
         public List<Vacation>? vacations { get; set; }
 
         [JsonIgnore] public List<Department>? departments { get; set; }
+        [JsonIgnore] public List<Reception>? receptions { get; set; }
     }
 }
