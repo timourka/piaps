@@ -73,7 +73,7 @@ public class DataSeeder
         {
             name = "Alice Smith",
             login = "alice",
-            password = "password123",
+            password = "alice",
             jobTitle = doctor,
             vacations = new List<Vacation> { vacation }
         };

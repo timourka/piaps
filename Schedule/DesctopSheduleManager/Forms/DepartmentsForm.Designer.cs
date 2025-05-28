@@ -35,98 +35,90 @@ namespace DesctopSheduleManager
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridDepartments = new System.Windows.Forms.DataGridView();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnGenerateSchedule = new System.Windows.Forms.Button();
-
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridDepartments)).BeginInit();
-            this.SuspendLayout();
-
+            dataGridDepartments = new DataGridView();
+            txtName = new TextBox();
+            btnAdd = new Button();
+            btnUpdate = new Button();
+            btnDelete = new Button();
+            btnGenerateSchedule = new Button();
+            ((System.ComponentModel.ISupportInitialize)dataGridDepartments).BeginInit();
+            SuspendLayout();
             // 
             // dataGridDepartments
             // 
-            this.dataGridDepartments.AllowUserToAddRows = false;
-            this.dataGridDepartments.AllowUserToDeleteRows = false;
-            this.dataGridDepartments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridDepartments.Location = new System.Drawing.Point(12, 12);
-            this.dataGridDepartments.Name = "dataGridDepartments";
-            this.dataGridDepartments.ReadOnly = true;
-            this.dataGridDepartments.RowTemplate.Height = 25;
-            this.dataGridDepartments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridDepartments.Size = new System.Drawing.Size(500, 200);
-            this.dataGridDepartments.SelectionChanged += new System.EventHandler(this.dataGridDepartments_SelectionChanged);
-
+            dataGridDepartments.AllowUserToAddRows = false;
+            dataGridDepartments.AllowUserToDeleteRows = false;
+            dataGridDepartments.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridDepartments.Location = new Point(12, 12);
+            dataGridDepartments.Name = "dataGridDepartments";
+            dataGridDepartments.ReadOnly = true;
+            dataGridDepartments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridDepartments.Size = new Size(500, 200);
+            dataGridDepartments.TabIndex = 0;
+            dataGridDepartments.SelectionChanged += dataGridDepartments_SelectionChanged;
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(12, 230);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(200, 23);
-            this.txtName.TabIndex = 1;
-
+            txtName.Location = new Point(12, 230);
+            txtName.Name = "txtName";
+            txtName.Size = new Size(200, 23);
+            txtName.TabIndex = 1;
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(220, 230);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 2;
-            this.btnAdd.Text = "Добавить";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-
+            btnAdd.Location = new Point(220, 230);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(75, 23);
+            btnAdd.TabIndex = 2;
+            btnAdd.Text = "Добавить";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(300, 230);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
-            this.btnUpdate.TabIndex = 3;
-            this.btnUpdate.Text = "Обновить";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-
+            btnUpdate.Location = new Point(300, 230);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.TabIndex = 3;
+            btnUpdate.Text = "Обновить";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(380, 230);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 4;
-            this.btnDelete.Text = "Удалить";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-
+            btnDelete.Location = new Point(380, 230);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(75, 23);
+            btnDelete.TabIndex = 4;
+            btnDelete.Text = "Удалить";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnGenerateSchedule
             // 
-            this.btnGenerateSchedule.Location = new System.Drawing.Point(460, 230);
-            this.btnGenerateSchedule.Name = "btnGenerateSchedule";
-            this.btnGenerateSchedule.Size = new System.Drawing.Size(100, 23);
-            this.btnGenerateSchedule.TabIndex = 5;
-            this.btnGenerateSchedule.Text = "Генерировать расписание";
-            this.btnGenerateSchedule.UseVisualStyleBackColor = true;
-            this.btnGenerateSchedule.Click += new System.EventHandler(this.btnGenerateSchedule_Click);
-
+            btnGenerateSchedule.Location = new Point(460, 230);
+            btnGenerateSchedule.Name = "btnGenerateSchedule";
+            btnGenerateSchedule.Size = new Size(93, 44);
+            btnGenerateSchedule.TabIndex = 5;
+            btnGenerateSchedule.Text = "Генерировать расписание";
+            btnGenerateSchedule.UseVisualStyleBackColor = true;
+            btnGenerateSchedule.Click += btnGenerateSchedule_Click;
             // 
             // DepartmentsForm
             // 
-            this.ClientSize = new System.Drawing.Size(600, 300);
-            this.Controls.Add(this.dataGridDepartments);
-            this.Controls.Add(this.txtName);
-            this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.btnUpdate);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnGenerateSchedule);
-            this.Name = "DepartmentsForm";
-            this.Text = "Департаменты";
-            this.Load += new System.EventHandler(this.DepartmentsForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridDepartments)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new Size(600, 300);
+            Controls.Add(dataGridDepartments);
+            Controls.Add(txtName);
+            Controls.Add(btnAdd);
+            Controls.Add(btnUpdate);
+            Controls.Add(btnDelete);
+            Controls.Add(btnGenerateSchedule);
+            Name = "DepartmentsForm";
+            Text = "Департаменты";
+            Load += DepartmentsForm_Load;
+            ((System.ComponentModel.ISupportInitialize)dataGridDepartments).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
