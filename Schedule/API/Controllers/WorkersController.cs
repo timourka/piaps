@@ -101,4 +101,33 @@ public class WorkersController : ControllerBase
 
         return Ok(new { message = "Worker deleted" });
     }
+
+    [HttpGet("test-notification/{id}")]
+    public async Task<IActionResult> TestNotification(int id)
+    {
+        var worker = await _workerRepo.GetByIdAsync(id);
+        if (worker == null)
+            return NotFound(new { error = "Worker not found" });
+
+        var httpClient = new HttpClient();
+
+        var requestBody = new
+        {
+            login = worker.login,
+            text = $"🔔 Тестовое уведомление для {worker.name}!"
+        };
+
+        var response = await httpClient.PostAsJsonAsync("http://localhost:8000/notify", requestBody);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Ok(new { message = "Notification sent." });
+        }
+        else
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            return StatusCode((int)response.StatusCode, new { error = "Failed to send notification", details = content });
+        }
+    }
+
 }

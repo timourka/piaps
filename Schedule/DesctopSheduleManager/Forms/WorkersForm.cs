@@ -132,5 +132,38 @@ namespace DesctopSheduleManager
         {
             await LoadWorkersAsync();
         }
+
+        private async void buttonNotificationTest_Click(object sender, EventArgs e)
+        {
+            if (dataGridWorkers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите работника.");
+                return;
+            }
+
+            // Предполагаем, что id хранится в первой колонке
+            int selectedWorkerId = Convert.ToInt32(dataGridWorkers.SelectedRows[0].Cells["id"].Value);
+
+            try
+            {
+                var response = await _client.GetAsync(
+                    $"api/worker/test-notification/{selectedWorkerId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("✅ Уведомление успешно отправлено.");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"❌ Ошибка при отправке уведомления:\n{errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"⚠️ Ошибка запроса:\n{ex.Message}");
+            }
+        }
+
     }
 }

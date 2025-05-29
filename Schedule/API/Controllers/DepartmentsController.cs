@@ -207,6 +207,15 @@ public class DepartmentsController : ControllerBase
                         reception.startTime = receptionStartTime;
                         await _receptionRepo.UpdateAsync(reception);
                         await _receptionRepo.SaveAsync();
+
+                        // 🔔 Уведомляем всех работников
+                        foreach (var worker in reception.personnel)
+                        {
+                            _ = NotifyWorkerAsync(worker, reception, immediate: true);
+                            ScheduleNotification(worker, reception, TimeSpan.FromMinutes(15));
+                            ScheduleNotification(worker, reception, TimeSpan.FromMinutes(1));
+                        }
+
                         receptions = (await _receptionRepo.GetAllAsync())
                             .Where(r => r.department?.id == departmentId && !r.date.HasValue)
                             .ToList();
@@ -225,6 +234,42 @@ public class DepartmentsController : ControllerBase
 
         return Ok(scheduled);
     }
+    private async Task NotifyWorkerAsync(Worker worker, Reception reception, bool immediate = false)
+    {
+        try
+        {
+            using var client = new HttpClient();
+            var text = immediate
+                ? $"📅 Вам назначен приём: {reception.date:dd.MM.yyyy} в {reception.startTime:hh\\:mm}, отделение: {reception.department?.name}"
+                : $"⏰ Напоминание: Приём в {reception.startTime:hh\\:mm}.";
+
+            var payload = new
+            {
+                login = worker.login,
+                text
+            };
+
+            var response = await client.PostAsJsonAsync("http://localhost:8000/notify", payload);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[NotifyWorkerAsync Error] {ex.Message}");
+        }
+    }
+
+    private void ScheduleNotification(Worker worker, Reception reception, TimeSpan beforeStart)
+    {
+        var now = DateTime.Now;
+        var targetTime = reception.date.Value.ToDateTime(reception.startTime.Value).Add(-beforeStart);
+        var delay = targetTime - now;
+
+        if (delay.TotalMilliseconds <= 0)
+            return;
+
+        Task.Delay(delay).ContinueWith(_ => NotifyWorkerAsync(worker, reception));
+    }
+
 
     [HttpGet("get-schedule-for-period")]
     [AuthorizeWithSid]

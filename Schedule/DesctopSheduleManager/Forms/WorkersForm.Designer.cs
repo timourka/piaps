@@ -54,6 +54,7 @@
             lblLogin = new Label();
             lblPassword = new Label();
             lblJobTitle = new Label();
+            buttonNotificationTest = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridWorkers).BeginInit();
             SuspendLayout();
             // 
@@ -162,9 +163,20 @@
             lblJobTitle.TabIndex = 12;
             lblJobTitle.Text = "Должность:";
             // 
+            // buttonNotificationTest
+            // 
+            buttonNotificationTest.Location = new Point(405, 415);
+            buttonNotificationTest.Name = "buttonNotificationTest";
+            buttonNotificationTest.Size = new Size(115, 23);
+            buttonNotificationTest.TabIndex = 13;
+            buttonNotificationTest.Text = "тест уведомления";
+            buttonNotificationTest.UseVisualStyleBackColor = true;
+            buttonNotificationTest.Click += buttonNotificationTest_Click;
+            // 
             // WorkersForm
             // 
             ClientSize = new Size(550, 450);
+            Controls.Add(buttonNotificationTest);
             Controls.Add(txtName);
             Controls.Add(txtLogin);
             Controls.Add(txtPassword);
@@ -187,5 +199,7 @@
         }
 
         #endregion
+
+        private Button buttonNotificationTest;
     }
 }
