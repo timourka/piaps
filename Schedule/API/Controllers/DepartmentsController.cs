@@ -149,22 +149,52 @@ public class DepartmentsController : ControllerBase
                     ).ToList();
 
                 // предположим что у нас отрезки времени это пол часа
-                for (TimeOnly time = schedule.startOfWork; time < schedule.endOfWork; time = time.Add(new TimeSpan(0, 30, 0)))
+                for (TimeOnly receptionStartTime = schedule.startOfWork; 
+                    receptionStartTime < schedule.endOfWork; 
+                    receptionStartTime = receptionStartTime.Add(new TimeSpan(0, 30, 0)))
                 {
-                    List<Worker> freeWorkers = workingWorkers.Where(
-                        w => !receptions.Any(
-                            r =>
-                            r.personnel.Contains(w) &&
-                            r.date == targetDate &&
-                            (
-                                r.startTime < time &&
-                                r.endTime > time
-                                ||
-                                r.startTime < time.Add(reception.time) &&
-                                r.endTime > time.Add(reception.time)
-                            ))
-                        ).ToList();
-                    foreach(JobTitle job in reception.requiredPersonnel)
+                    var receptionEndTime = receptionStartTime.Add(reception.time);
+                    List<Worker> freeWorkers = new();
+                    foreach (var worker in workingWorkers)
+                    {
+                        bool nany = true;
+                        if (worker.receptions != null && worker.receptions.Any())
+                            foreach (var r in worker.receptions)
+                            {
+                                if (r.date.Equals(targetDate)
+                                    &&
+                                    (
+                                        r.startTime <= receptionEndTime && r.startTime >= receptionStartTime
+                                        ||
+                                        r.endTime <= receptionEndTime && r.endTime >= receptionStartTime
+                                        ||
+                                        r.endTime <= receptionStartTime && r.startTime >= receptionStartTime
+                                        ||
+                                        r.endTime <= receptionEndTime && r.startTime >= receptionEndTime
+                                    )
+                                )
+                                {
+                                    nany = false;
+                                    break;
+                                }
+                            }
+                        if (nany)
+                            freeWorkers.Add(worker);
+                    }
+                    //List<Worker> freeWorkers = workingWorkers.Where(
+                    //    w => !w.receptions.Any(
+                    //        r => r.date.Equals(targetDate) && (
+                    //            r.startTime <= receptionEndTime && r.startTime >= receptionStartTime
+                    //            ||
+                    //            r.endTime <= receptionEndTime && r.endTime >= receptionStartTime
+                    //            ||
+                    //            r.endTime <= receptionStartTime && r.startTime >= receptionStartTime
+                    //            ||
+                    //            r.endTime <= receptionEndTime && r.startTime >= receptionEndTime
+                    //            )
+                    //        )                            
+                    //    ).ToList();
+                    foreach (JobTitle job in reception.requiredPersonnel)
                     {
                         Worker ourWorker = freeWorkers.FirstOrDefault(w => w.jobTitle == job);
                         if (ourWorker == null)
@@ -174,7 +204,7 @@ public class DepartmentsController : ControllerBase
                     if (reception.personnel.Count == reception.requiredPersonnel.Count)
                     {
                         reception.date = targetDate;
-                        reception.startTime = time;
+                        reception.startTime = receptionStartTime;
                         await _receptionRepo.UpdateAsync(reception);
                         await _receptionRepo.SaveAsync();
                         receptions = (await _receptionRepo.GetAllAsync())
