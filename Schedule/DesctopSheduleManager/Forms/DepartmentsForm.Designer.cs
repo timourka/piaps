@@ -41,6 +41,7 @@ namespace DesctopSheduleManager
             btnUpdate = new Button();
             btnDelete = new Button();
             btnGenerateSchedule = new Button();
+            buttonChangeShedule = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridDepartments).BeginInit();
             SuspendLayout();
             // 
@@ -53,7 +54,7 @@ namespace DesctopSheduleManager
             dataGridDepartments.Name = "dataGridDepartments";
             dataGridDepartments.ReadOnly = true;
             dataGridDepartments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridDepartments.Size = new Size(500, 200);
+            dataGridDepartments.Size = new Size(650, 200);
             dataGridDepartments.TabIndex = 0;
             dataGridDepartments.SelectionChanged += dataGridDepartments_SelectionChanged;
             // 
@@ -96,17 +97,28 @@ namespace DesctopSheduleManager
             // 
             // btnGenerateSchedule
             // 
-            btnGenerateSchedule.Location = new Point(460, 230);
+            btnGenerateSchedule.Location = new Point(554, 230);
             btnGenerateSchedule.Name = "btnGenerateSchedule";
-            btnGenerateSchedule.Size = new Size(93, 44);
+            btnGenerateSchedule.Size = new Size(108, 58);
             btnGenerateSchedule.TabIndex = 5;
-            btnGenerateSchedule.Text = "Генерировать расписание";
+            btnGenerateSchedule.Text = "Распределить задачи автоматически";
             btnGenerateSchedule.UseVisualStyleBackColor = true;
             btnGenerateSchedule.Click += btnGenerateSchedule_Click;
             // 
+            // buttonChangeShedule
+            // 
+            buttonChangeShedule.Location = new Point(461, 230);
+            buttonChangeShedule.Name = "buttonChangeShedule";
+            buttonChangeShedule.Size = new Size(87, 44);
+            buttonChangeShedule.TabIndex = 6;
+            buttonChangeShedule.Text = "изменить расписание";
+            buttonChangeShedule.UseVisualStyleBackColor = true;
+            buttonChangeShedule.Click += buttonChangeShedule_Click;
+            // 
             // DepartmentsForm
             // 
-            ClientSize = new Size(600, 300);
+            ClientSize = new Size(674, 300);
+            Controls.Add(buttonChangeShedule);
             Controls.Add(dataGridDepartments);
             Controls.Add(txtName);
             Controls.Add(btnAdd);
@@ -122,5 +134,7 @@ namespace DesctopSheduleManager
         }
 
         #endregion
+
+        private Button buttonChangeShedule;
     }
 }

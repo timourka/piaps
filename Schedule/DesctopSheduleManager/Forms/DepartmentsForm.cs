@@ -117,5 +117,30 @@ namespace DesctopSheduleManager
         {
             await LoadDepartmentsAsync(); // Загружаем департаменты
         }
+
+        private void buttonChangeShedule_Click(object sender, EventArgs e)
+        {
+            if (dataGridDepartments.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите отделение.");
+                return;
+            }
+
+            var editorForm = new ScheduleEditorForm(selectedDepartment.workSchedules);
+
+            if (editorForm.ShowDialog() == DialogResult.OK)
+            {
+                selectedDepartment.workSchedules = editorForm.UpdatedSchedule;
+
+                // ❗ Если вы используете EF и хотите сохранить изменения в БД:
+                using (var db = new AppDbContext(...))
+                {
+                    db.Departments.Update(selectedDepartment);
+                    db.SaveChanges();
+                }
+
+                MessageBox.Show("Расписание обновлено.");
+            }
+        }
     }
 }
