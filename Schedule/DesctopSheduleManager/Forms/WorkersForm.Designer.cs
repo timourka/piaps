@@ -55,6 +55,8 @@
             lblPassword = new Label();
             lblJobTitle = new Label();
             buttonNotificationTest = new Button();
+            buttonChangeShedule = new Button();
+            buttonChangeVacations = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridWorkers).BeginInit();
             SuspendLayout();
             // 
@@ -173,9 +175,31 @@
             buttonNotificationTest.UseVisualStyleBackColor = true;
             buttonNotificationTest.Click += buttonNotificationTest_Click;
             // 
+            // buttonChangeShedule
+            // 
+            buttonChangeShedule.Location = new Point(20, 415);
+            buttonChangeShedule.Name = "buttonChangeShedule";
+            buttonChangeShedule.Size = new Size(151, 23);
+            buttonChangeShedule.TabIndex = 14;
+            buttonChangeShedule.Text = "изменить расписание";
+            buttonChangeShedule.UseVisualStyleBackColor = true;
+            buttonChangeShedule.Click += buttonChangeShedule_Click;
+            // 
+            // buttonChangeVacations
+            // 
+            buttonChangeVacations.Location = new Point(177, 415);
+            buttonChangeVacations.Name = "buttonChangeVacations";
+            buttonChangeVacations.Size = new Size(143, 23);
+            buttonChangeVacations.TabIndex = 15;
+            buttonChangeVacations.Text = "изменить отпуска";
+            buttonChangeVacations.UseVisualStyleBackColor = true;
+            buttonChangeVacations.Click += buttonChangeVacations_Click;
+            // 
             // WorkersForm
             // 
             ClientSize = new Size(550, 450);
+            Controls.Add(buttonChangeVacations);
+            Controls.Add(buttonChangeShedule);
             Controls.Add(buttonNotificationTest);
             Controls.Add(txtName);
             Controls.Add(txtLogin);
@@ -201,5 +225,7 @@
         #endregion
 
         private Button buttonNotificationTest;
+        private Button buttonChangeShedule;
+        private Button buttonChangeVacations;
     }
 }

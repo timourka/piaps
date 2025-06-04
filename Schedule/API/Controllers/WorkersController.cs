@@ -67,6 +67,7 @@ public class WorkersController : ControllerBase
         existing.password = updated.password;
         existing.jobTitle = updated.jobTitle;
         existing.vacations = updated.vacations;
+        existing.workSchedules = updated.workSchedules;
 
         if (existing.jobTitle != null)
         {

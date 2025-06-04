@@ -9,6 +9,6 @@ namespace Models
         public List<DayOff> days {  get; set; } 
 
         public int WorkerId {  get; set; }
-        [JsonIgnore] public Worker Worker { get; set; }
+        [JsonIgnore] public Worker? Worker { get; set; }
     }
 }

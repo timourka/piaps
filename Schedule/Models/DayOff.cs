@@ -10,6 +10,6 @@ namespace Models
         public int id { get; set; }
 
         public int VacationId { get; set; }
-        [JsonIgnore] public Vacation Vacation { get; set;}
+        [JsonIgnore] public Vacation? Vacation { get; set;}
     }
 }

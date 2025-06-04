@@ -1,4 +1,5 @@
-﻿using DesctopSheduleManager.Utilities;
+﻿using DesctopSheduleManager.Forms;
+using DesctopSheduleManager.Utilities;
 using Models;
 using System.Net.Http.Json;
 
@@ -165,5 +166,74 @@ namespace DesctopSheduleManager
             }
         }
 
+        private async void buttonChangeShedule_Click(object sender, EventArgs e)
+        {
+            if (dataGridWorkers.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите сотрудника.");
+                return;
+            }
+
+            int id = (int)dataGridWorkers.CurrentRow.Cells["id"].Value;
+
+            var worker = await _client.GetFromJsonAsync<Worker>($"api/worker/get/{id}");
+            if (worker == null)
+            {
+                MessageBox.Show("Работник не найден.");
+                return;
+            }
+
+            var scheduleEditor = new WorkerScheduleEditorForm(worker.workSchedules); // создайте такую форму
+            if (scheduleEditor.ShowDialog() == DialogResult.OK)
+            {
+                worker.workSchedules = scheduleEditor.UpdatedSchedule;
+
+                var response = await _client.PutAsJsonAsync($"api/worker/update/{id}", worker);
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("✅ Расписание обновлено.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"❌ Ошибка при обновлении:\n{error}");
+                }
+            }
+        }
+
+        private async void buttonChangeVacations_Click(object sender, EventArgs e)
+        {
+            if (dataGridWorkers.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите сотрудника.");
+                return;
+            }
+
+            int id = (int)dataGridWorkers.CurrentRow.Cells["id"].Value;
+
+            var worker = await _client.GetFromJsonAsync<Worker>($"api/worker/get/{id}");
+            if (worker == null)
+            {
+                MessageBox.Show("Работник не найден.");
+                return;
+            }
+
+            var vacationEditor = new VacationEditorForm(worker.vacations); // создайте такую форму
+            if (vacationEditor.ShowDialog() == DialogResult.OK)
+            {
+                worker.vacations = vacationEditor.UpdatedVacations;
+
+                var response = await _client.PutAsJsonAsync($"api/worker/update/{id}", worker);
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("✅ Отпуска обновлены.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"❌ Ошибка при обновлении:\n{error}");
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DesctopSheduleManager.Utilities;
+﻿using DesctopSheduleManager.Forms;
+using DesctopSheduleManager.Utilities;
 using Models;
 using System.Net.Http.Json;
 using System.Xml.Linq;
@@ -118,7 +119,7 @@ namespace DesctopSheduleManager
             await LoadDepartmentsAsync(); // Загружаем департаменты
         }
 
-        private void buttonChangeShedule_Click(object sender, EventArgs e)
+        private async void buttonChangeShedule_Click(object sender, EventArgs e)
         {
             if (dataGridDepartments.CurrentRow == null)
             {
@@ -126,21 +127,53 @@ namespace DesctopSheduleManager
                 return;
             }
 
+            Department selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            if (selectedDepartment == null)
+            {
+                MessageBox.Show("Не удалось получить отделение.");
+                return;
+            }
+
             var editorForm = new ScheduleEditorForm(selectedDepartment.workSchedules);
 
             if (editorForm.ShowDialog() == DialogResult.OK)
             {
-                selectedDepartment.workSchedules = editorForm.UpdatedSchedule;
+                var updatedSchedule = editorForm.UpdatedSchedule;
 
-                // ❗ Если вы используете EF и хотите сохранить изменения в БД:
-                using (var db = new AppDbContext(...))
+                // Установим DepartmentId каждому элементу расписания
+                foreach (var ws in updatedSchedule)
                 {
-                    db.Departments.Update(selectedDepartment);
-                    db.SaveChanges();
+                    if (ws != null)
+                        ws.DepartmentId = selectedDepartment.id;
                 }
 
-                MessageBox.Show("Расписание обновлено.");
+                selectedDepartment.workSchedules = updatedSchedule;
+
+                try
+                {
+                    var response = await _client.PutAsJsonAsync(
+                        $"api/department/update/{selectedDepartment.id}", selectedDepartment);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Расписание обновлено.");
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Ошибка обновления: {response.StatusCode}\n{error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при подключении к API:\n{ex.Message}");
+                }
             }
+        }
+
+        private void buttonShedule_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

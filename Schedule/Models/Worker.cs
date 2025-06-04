@@ -12,6 +12,7 @@ namespace Models
         public int? JobTitleId { get; set; }
         public JobTitle? jobTitle { get; set; }
         public List<Vacation>? vacations { get; set; }
+        public List<WorkerWorkSchedule4Day> workSchedules { get; set; } = new List<WorkerWorkSchedule4Day>(14);
 
         [JsonIgnore] public List<Department>? departments { get; set; }
         [JsonIgnore] public List<Reception>? receptions { get; set; }

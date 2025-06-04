@@ -42,6 +42,7 @@ namespace DesctopSheduleManager
             btnDelete = new Button();
             btnGenerateSchedule = new Button();
             buttonChangeShedule = new Button();
+            buttonShedule = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridDepartments).BeginInit();
             SuspendLayout();
             // 
@@ -54,7 +55,7 @@ namespace DesctopSheduleManager
             dataGridDepartments.Name = "dataGridDepartments";
             dataGridDepartments.ReadOnly = true;
             dataGridDepartments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridDepartments.Size = new Size(650, 200);
+            dataGridDepartments.Size = new Size(759, 200);
             dataGridDepartments.TabIndex = 0;
             dataGridDepartments.SelectionChanged += dataGridDepartments_SelectionChanged;
             // 
@@ -115,9 +116,20 @@ namespace DesctopSheduleManager
             buttonChangeShedule.UseVisualStyleBackColor = true;
             buttonChangeShedule.Click += buttonChangeShedule_Click;
             // 
+            // buttonShedule
+            // 
+            buttonShedule.Location = new Point(668, 230);
+            buttonShedule.Name = "buttonShedule";
+            buttonShedule.Size = new Size(103, 58);
+            buttonShedule.TabIndex = 7;
+            buttonShedule.Text = "посмотреть расписание за период";
+            buttonShedule.UseVisualStyleBackColor = true;
+            buttonShedule.Click += buttonShedule_Click;
+            // 
             // DepartmentsForm
             // 
-            ClientSize = new Size(674, 300);
+            ClientSize = new Size(783, 300);
+            Controls.Add(buttonShedule);
             Controls.Add(buttonChangeShedule);
             Controls.Add(dataGridDepartments);
             Controls.Add(txtName);
@@ -136,5 +148,6 @@ namespace DesctopSheduleManager
         #endregion
 
         private Button buttonChangeShedule;
+        private Button buttonShedule;
     }
 }

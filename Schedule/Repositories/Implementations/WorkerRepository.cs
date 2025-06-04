@@ -11,6 +11,7 @@ public class WorkerRepository : BaseRepository<Worker>
     {
         return await _dbSet
             .Include(w => w.jobTitle)
+            .Include(w => w.workSchedules)
             .Include(w => w.vacations)
                 .ThenInclude(v => v.days)
             .Include(w => w.departments)
@@ -21,6 +22,7 @@ public class WorkerRepository : BaseRepository<Worker>
     {
         return await _dbSet
             .Include(w => w.jobTitle)
+            .Include(w => w.workSchedules)
             .Include(w => w.vacations)
                 .ThenInclude(v => v.days)
             .Include(w => w.departments)

@@ -1,44 +1,50 @@
 ﻿using Models;
-using System.Data;
-using System.Windows.Forms;
 
 namespace DesctopSheduleManager.Forms
 {
-    public partial class ScheduleEditorForm : Form
+    public partial class WorkerScheduleEditorForm : Form
     {
         private List<CheckBox> workingCheckboxes = new();
         private List<DateTimePicker> startPickers = new();
         private List<DateTimePicker> endPickers = new();
         private List<Label> dayLabels = new();
-        private List<string> dayNames = new() { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
+        private List<string> dayNames = new() {
+            "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс",
+        };// должны циклически повторяться при добавлении нового дня
 
-        private List<WorkSchedule4Day?> schedule;
+        private List<WorkerWorkSchedule4Day> schedule;
 
-        public List<WorkSchedule4Day?> UpdatedSchedule => schedule;
+        public List<WorkerWorkSchedule4Day> UpdatedSchedule => schedule;
 
-        public ScheduleEditorForm(List<WorkSchedule4Day?> existingSchedule)
+        public WorkerScheduleEditorForm(List<WorkerWorkSchedule4Day> existingSchedule)
         {
             InitializeComponent();
-            schedule = existingSchedule.Select(ws => ws != null ? new WorkSchedule4Day
+            schedule = existingSchedule.Select(ws => new WorkerWorkSchedule4Day
             {
                 startOfWork = ws.startOfWork,
                 endOfWork = ws.endOfWork,
                 isWorking = ws.isWorking
-            } : null).ToList();
+            }).ToList();
 
             LoadScheduleIntoControls();
         }
 
         private void LoadScheduleIntoControls()
         {
-            tableLayoutPanel1.RowCount = 7;
+            tableLayoutPanel1.RowCount = schedule.Count;
             tableLayoutPanel1.ColumnCount = 4;
             tableLayoutPanel1.Controls.Clear();
             tableLayoutPanel1.AutoSize = true;
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < schedule.Count; i++)
             {
-                var label = new Label { Text = dayNames[i], AutoSize = true, Anchor = AnchorStyles.Left };
+                var label = new Label
+                {
+                    Text = dayNames[i % dayNames.Count],
+                    AutoSize = true,
+                    Anchor = AnchorStyles.Left
+                };
+
                 var checkbox = new CheckBox { Checked = schedule[i]?.isWorking ?? false };
                 var start = new DateTimePicker { Format = DateTimePickerFormat.Time, ShowUpDown = true };
                 var end = new DateTimePicker { Format = DateTimePickerFormat.Time, ShowUpDown = true };
@@ -65,11 +71,11 @@ namespace DesctopSheduleManager.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < schedule.Count; i++)
             {
                 if (workingCheckboxes[i].Checked)
                 {
-                    schedule[i] = new WorkSchedule4Day
+                    schedule[i] = new WorkerWorkSchedule4Day
                     {
                         isWorking = true,
                         startOfWork = TimeOnly.FromDateTime(startPickers[i].Value),
@@ -78,7 +84,7 @@ namespace DesctopSheduleManager.Forms
                 }
                 else
                 {
-                    schedule[i] = new WorkSchedule4Day
+                    schedule[i] = new WorkerWorkSchedule4Day
                     {
                         isWorking = false,
                         startOfWork = TimeOnly.MinValue,
@@ -89,6 +95,32 @@ namespace DesctopSheduleManager.Forms
 
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            // Добавим новый день по умолчанию
+            schedule.Add(new WorkerWorkSchedule4Day
+            {
+                isWorking = false,
+                startOfWork = TimeOnly.MinValue,
+                endOfWork = TimeOnly.MinValue
+            });
+
+            // Перезагрузим UI
+            LoadScheduleIntoControls();
+        }
+
+        private void buttonDel_Click(object sender, EventArgs e)
+        {
+            if (schedule.Count > 0)
+            {
+                // Удалим последний день
+                schedule.RemoveAt(schedule.Count - 1);
+
+                // Перезагрузим UI
+                LoadScheduleIntoControls();
+            }
         }
     }
 }

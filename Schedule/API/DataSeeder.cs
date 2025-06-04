@@ -64,9 +64,9 @@ public class DataSeeder
         var vacation = new Vacation
         {
             days = new List<DayOff>
-        {
-            new DayOff { date = DateOnly.FromDateTime(DateTime.Today.AddDays(5)) }
-        }
+    {
+        new DayOff { date = DateOnly.FromDateTime(DateTime.Today.AddDays(5)) }
+    }
         };
 
         var worker1 = new Worker
@@ -92,6 +92,38 @@ public class DataSeeder
         await _workerRepo.SaveAsync();
         worker1 = await _workerRepo.GetByIdAsync(worker1.id);
         worker2 = await _workerRepo.GetByIdAsync(worker2.id);
+
+        // 3. Расписание работы для сотрудников
+
+        // Расписание "2 через 2" для worker1 (Пн и Вт — рабочие)
+        var schedule2x2 = new List<WorkerWorkSchedule4Day>
+{
+    new() { startOfWork = new TimeOnly(9, 0), endOfWork = new TimeOnly(17, 0), isWorking = true }, // Пн
+    new() { startOfWork = new TimeOnly(9, 0), endOfWork = new TimeOnly(17, 0), isWorking = true }, // Вт
+    new() { startOfWork = new TimeOnly(9, 0), endOfWork = new TimeOnly(17, 0), isWorking = false }, // Ср
+    new() { startOfWork = new TimeOnly(9, 0), endOfWork = new TimeOnly(17, 0), isWorking = false }, // Чт
+};
+
+        worker1.workSchedules = schedule2x2;
+
+        // Расписание 5/2 для worker2 (Пн–Пт — рабочие, Сб и Вс — выходные)
+        var schedule5x2 = new List<WorkerWorkSchedule4Day>
+{
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = true }, // Пн
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = true }, // Вт
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = true }, // Ср
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = true }, // Чт
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = true }, // Пт
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = false }, // Сб
+    new() { startOfWork = new TimeOnly(8, 0), endOfWork = new TimeOnly(16, 0), isWorking = false }, // Вс
+};
+
+        worker2.workSchedules = schedule5x2;
+
+        // Обновляем работников с расписанием
+        await _workerRepo.UpdateAsync(worker1);
+        await _workerRepo.UpdateAsync(worker2);
+        await _workerRepo.SaveAsync();
 
         // 3. Отделение с графиком
         var schedule = new List<WorkSchedule4Day>
