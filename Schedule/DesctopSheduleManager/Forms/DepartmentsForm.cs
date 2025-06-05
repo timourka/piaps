@@ -2,7 +2,6 @@
 using DesctopSheduleManager.Utilities;
 using Models;
 using System.Net.Http.Json;
-using System.Xml.Linq;
 
 namespace DesctopSheduleManager
 {
@@ -173,7 +172,22 @@ namespace DesctopSheduleManager
 
         private void buttonShedule_Click(object sender, EventArgs e)
         {
+            if (dataGridDepartments.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите отделение.");
+                return;
+            }
 
+            Department selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            if (selectedDepartment == null)
+            {
+                MessageBox.Show("Не удалось получить отделение.");
+                return;
+            }
+
+            var sheduleForm = new SheduleForm(selectedDepartment.id);
+
+            sheduleForm.ShowDialog();
         }
     }
 }

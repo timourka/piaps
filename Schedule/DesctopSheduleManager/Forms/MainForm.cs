@@ -66,5 +66,11 @@ namespace DesctopSheduleManager.Forms
 
             Application.Exit();
         }
+
+        private void buttonStats_Click(object sender, EventArgs e)
+        {
+            var form = new StatsForm();
+            form.ShowDialog();
+        }
     }
 }

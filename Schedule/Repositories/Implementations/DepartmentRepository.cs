@@ -16,6 +16,8 @@ public class DepartmentRepository : BaseRepository<Department>
             .Include(d => d.workers)
                 .ThenInclude(w => w.vacations)
                     .ThenInclude(v => v.days)
+            .Include(d => d.workers)
+                .ThenInclude(w => w.workSchedules)
             .ToListAsync();
     }
 
@@ -28,6 +30,8 @@ public class DepartmentRepository : BaseRepository<Department>
             .Include(d => d.workers)
                 .ThenInclude(w => w.vacations)
                     .ThenInclude(v => v.days)
+            .Include(d => d.workers)
+                .ThenInclude(w => w.workSchedules)
             .FirstOrDefaultAsync(d => d.id == id);
     }
 }

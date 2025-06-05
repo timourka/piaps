@@ -1,11 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Repositories.Implementations;
 using Repositories.Interfaces;
 using Repositories;
-using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information() // Уровень логирования
+    .WriteTo.Console()          // В консоль
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day) // В файл (один файл в день)
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // Add services to the container.
 

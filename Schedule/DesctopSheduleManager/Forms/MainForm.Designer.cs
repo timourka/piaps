@@ -37,6 +37,7 @@
             btnDepartment = new Button();
             btnReceptions = new Button();
             btnReport = new Button();
+            buttonStats = new Button();
             SuspendLayout();
             // 
             // btnHolidays
@@ -51,7 +52,7 @@
             // 
             // btnLogout
             // 
-            btnLogout.Location = new Point(50, 315);
+            btnLogout.Location = new Point(50, 389);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(180, 40);
             btnLogout.TabIndex = 1;
@@ -109,9 +110,20 @@
             btnReport.UseVisualStyleBackColor = true;
             btnReport.Click += btnReport_Click;
             // 
+            // buttonStats
+            // 
+            buttonStats.Location = new Point(50, 306);
+            buttonStats.Name = "buttonStats";
+            buttonStats.Size = new Size(180, 40);
+            buttonStats.TabIndex = 7;
+            buttonStats.Text = "статистика";
+            buttonStats.UseVisualStyleBackColor = true;
+            buttonStats.Click += buttonStats_Click;
+            // 
             // MainForm
             // 
-            ClientSize = new Size(286, 367);
+            ClientSize = new Size(286, 441);
+            Controls.Add(buttonStats);
             Controls.Add(btnReport);
             Controls.Add(btnReceptions);
             Controls.Add(btnDepartment);
@@ -130,5 +142,6 @@
         private Button btnDepartment;
         private Button btnReceptions;
         private Button btnReport;
+        private Button buttonStats;
     }
 }

@@ -8,7 +8,6 @@ namespace DesctopSheduleManager
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private DataGridView dataGridReceptions;
-        private TextBox txtTime;
         private ComboBox cmbDepartment;
         private ComboBox cmbJobTitle;
         private DateTimePicker dtpDate;
@@ -40,128 +39,148 @@ namespace DesctopSheduleManager
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridReceptions = new System.Windows.Forms.DataGridView();
-            this.txtTime = new System.Windows.Forms.TextBox();
-            this.cmbDepartment = new System.Windows.Forms.ComboBox();
-            this.cmbJobTitle = new System.Windows.Forms.ComboBox();
-            this.dtpDate = new System.Windows.Forms.DateTimePicker();
-            this.btnAddJobTitle = new System.Windows.Forms.Button();
-            this.btnRemoveJobTitle = new System.Windows.Forms.Button();
-            this.lstJobTitles = new System.Windows.Forms.ListBox();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridReceptions)).BeginInit();
-            this.SuspendLayout();
-
+            dataGridReceptions = new DataGridView();
+            cmbDepartment = new ComboBox();
+            cmbJobTitle = new ComboBox();
+            dtpDate = new DateTimePicker();
+            btnAddJobTitle = new Button();
+            btnRemoveJobTitle = new Button();
+            lstJobTitles = new ListBox();
+            btnAdd = new Button();
+            btnUpdate = new Button();
+            btnDelete = new Button();
+            dateTimePickerTime = new DateTimePicker();
+            ((System.ComponentModel.ISupportInitialize)dataGridReceptions).BeginInit();
+            SuspendLayout();
+            // 
             // dataGridReceptions
-            this.dataGridReceptions.AllowUserToAddRows = false;
-            this.dataGridReceptions.AllowUserToDeleteRows = false;
-            this.dataGridReceptions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridReceptions.Location = new System.Drawing.Point(12, 12);
-            this.dataGridReceptions.Name = "dataGridReceptions";
-            this.dataGridReceptions.ReadOnly = true;
-            this.dataGridReceptions.RowTemplate.Height = 25;
-            this.dataGridReceptions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridReceptions.Size = new System.Drawing.Size(500, 200);
-            this.dataGridReceptions.SelectionChanged += new System.EventHandler(this.dataGridReceptions_SelectionChanged);
-
-            // txtTime
-            this.txtTime.Location = new System.Drawing.Point(12, 230);
-            this.txtTime.Name = "txtTime";
-            this.txtTime.Size = new System.Drawing.Size(200, 23);
-            this.txtTime.TabIndex = 1;
-
+            // 
+            dataGridReceptions.AllowUserToAddRows = false;
+            dataGridReceptions.AllowUserToDeleteRows = false;
+            dataGridReceptions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridReceptions.Location = new Point(12, 12);
+            dataGridReceptions.Name = "dataGridReceptions";
+            dataGridReceptions.ReadOnly = true;
+            dataGridReceptions.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridReceptions.Size = new Size(500, 200);
+            dataGridReceptions.TabIndex = 10;
+            dataGridReceptions.SelectionChanged += dataGridReceptions_SelectionChanged;
+            // 
             // cmbDepartment
-            this.cmbDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDepartment.FormattingEnabled = true;
-            this.cmbDepartment.Location = new System.Drawing.Point(12, 270);
-            this.cmbDepartment.Name = "cmbDepartment";
-            this.cmbDepartment.Size = new System.Drawing.Size(200, 23);
-            this.cmbDepartment.TabIndex = 2;
-
+            // 
+            cmbDepartment.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbDepartment.FormattingEnabled = true;
+            cmbDepartment.Location = new Point(12, 270);
+            cmbDepartment.Name = "cmbDepartment";
+            cmbDepartment.Size = new Size(200, 23);
+            cmbDepartment.TabIndex = 2;
+            // 
             // cmbJobTitle
-            this.cmbJobTitle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbJobTitle.FormattingEnabled = true;
-            this.cmbJobTitle.Location = new System.Drawing.Point(12, 310);
-            this.cmbJobTitle.Name = "cmbJobTitle";
-            this.cmbJobTitle.Size = new System.Drawing.Size(200, 23);
-            this.cmbJobTitle.TabIndex = 3;
-
+            // 
+            cmbJobTitle.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbJobTitle.FormattingEnabled = true;
+            cmbJobTitle.Location = new Point(12, 310);
+            cmbJobTitle.Name = "cmbJobTitle";
+            cmbJobTitle.Size = new Size(200, 23);
+            cmbJobTitle.TabIndex = 3;
+            // 
+            // dtpDate
+            // 
+            dtpDate.Location = new Point(0, 0);
+            dtpDate.Name = "dtpDate";
+            dtpDate.Size = new Size(200, 23);
+            dtpDate.TabIndex = 0;
+            // 
             // btnAddJobTitle
-            this.btnAddJobTitle.Location = new System.Drawing.Point(220, 310);
-            this.btnAddJobTitle.Name = "btnAddJobTitle";
-            this.btnAddJobTitle.Size = new System.Drawing.Size(75, 23);
-            this.btnAddJobTitle.TabIndex = 4;
-            this.btnAddJobTitle.Text = "Добавить";
-            this.btnAddJobTitle.UseVisualStyleBackColor = true;
-            this.btnAddJobTitle.Click += new System.EventHandler(this.btnAddJobTitle_Click);
-
-            // lstJobTitles
-            this.lstJobTitles.FormattingEnabled = true;
-            this.lstJobTitles.ItemHeight = 15;
-            this.lstJobTitles.Location = new System.Drawing.Point(12, 350);
-            this.lstJobTitles.Name = "lstJobTitles";
-            this.lstJobTitles.Size = new System.Drawing.Size(200, 100);
-            this.lstJobTitles.TabIndex = 5;
-
+            // 
+            btnAddJobTitle.Location = new Point(220, 310);
+            btnAddJobTitle.Name = "btnAddJobTitle";
+            btnAddJobTitle.Size = new Size(75, 23);
+            btnAddJobTitle.TabIndex = 4;
+            btnAddJobTitle.Text = "Добавить";
+            btnAddJobTitle.UseVisualStyleBackColor = true;
+            btnAddJobTitle.Click += btnAddJobTitle_Click;
+            // 
             // btnRemoveJobTitle
-            this.btnRemoveJobTitle.Location = new System.Drawing.Point(220, 350);
-            this.btnRemoveJobTitle.Name = "btnRemoveJobTitle";
-            this.btnRemoveJobTitle.Size = new System.Drawing.Size(75, 23);
-            this.btnRemoveJobTitle.TabIndex = 6;
-            this.btnRemoveJobTitle.Text = "Удалить";
-            this.btnRemoveJobTitle.UseVisualStyleBackColor = true;
-            this.btnRemoveJobTitle.Click += new System.EventHandler(this.btnRemoveJobTitle_Click);
-
+            // 
+            btnRemoveJobTitle.Location = new Point(220, 350);
+            btnRemoveJobTitle.Name = "btnRemoveJobTitle";
+            btnRemoveJobTitle.Size = new Size(75, 23);
+            btnRemoveJobTitle.TabIndex = 6;
+            btnRemoveJobTitle.Text = "Удалить";
+            btnRemoveJobTitle.UseVisualStyleBackColor = true;
+            btnRemoveJobTitle.Click += btnRemoveJobTitle_Click;
+            // 
+            // lstJobTitles
+            // 
+            lstJobTitles.FormattingEnabled = true;
+            lstJobTitles.ItemHeight = 15;
+            lstJobTitles.Location = new Point(12, 350);
+            lstJobTitles.Name = "lstJobTitles";
+            lstJobTitles.Size = new Size(200, 94);
+            lstJobTitles.TabIndex = 5;
+            // 
             // btnAdd
-            this.btnAdd.Location = new System.Drawing.Point(12, 460);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.Text = "Добавить";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-
+            // 
+            btnAdd.Location = new Point(12, 460);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(75, 23);
+            btnAdd.TabIndex = 7;
+            btnAdd.Text = "Добавить";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
+            // 
             // btnUpdate
-            this.btnUpdate.Location = new System.Drawing.Point(100, 460);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
-            this.btnUpdate.TabIndex = 8;
-            this.btnUpdate.Text = "Обновить";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-
+            // 
+            btnUpdate.Location = new Point(100, 460);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.TabIndex = 8;
+            btnUpdate.Text = "Обновить";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Click += btnUpdate_Click;
+            // 
             // btnDelete
-            this.btnDelete.Location = new System.Drawing.Point(190, 460);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 9;
-            this.btnDelete.Text = "Удалить";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-
+            // 
+            btnDelete.Location = new Point(190, 460);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(75, 23);
+            btnDelete.TabIndex = 9;
+            btnDelete.Text = "Удалить";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
+            // 
+            // dateTimePickerTime
+            // 
+            dateTimePickerTime.Format = DateTimePickerFormat.Time;
+            dateTimePickerTime.Location = new Point(12, 230);
+            dateTimePickerTime.Name = "dateTimePickerTime";
+            dateTimePickerTime.ShowUpDown = true;
+            dateTimePickerTime.Size = new Size(200, 23);
+            dateTimePickerTime.TabIndex = 11;
+            // 
             // ReceptionsForm
-            this.ClientSize = new System.Drawing.Size(800, 500);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnUpdate);
-            this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.lstJobTitles);
-            this.Controls.Add(this.btnRemoveJobTitle);
-            this.Controls.Add(this.btnAddJobTitle);
-            this.Controls.Add(this.cmbJobTitle);
-            this.Controls.Add(this.cmbDepartment);
-            this.Controls.Add(this.txtTime);
-            this.Controls.Add(this.dataGridReceptions);
-            this.Name = "ReceptionsForm";
-            this.Text = "Приёмы";
-            this.Load += new System.EventHandler(this.ReceptionsForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridReceptions)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // 
+            ClientSize = new Size(800, 500);
+            Controls.Add(dateTimePickerTime);
+            Controls.Add(btnDelete);
+            Controls.Add(btnUpdate);
+            Controls.Add(btnAdd);
+            Controls.Add(lstJobTitles);
+            Controls.Add(btnRemoveJobTitle);
+            Controls.Add(btnAddJobTitle);
+            Controls.Add(cmbJobTitle);
+            Controls.Add(cmbDepartment);
+            Controls.Add(dataGridReceptions);
+            Name = "ReceptionsForm";
+            Text = "Приёмы";
+            Load += ReceptionsForm_Load;
+            ((System.ComponentModel.ISupportInitialize)dataGridReceptions).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private DateTimePicker dateTimePickerTime;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.DTO;
 using Repositories.Interfaces;
 
 [ApiController]
@@ -113,6 +114,53 @@ public class ReceptionsController : ControllerBase
         return Ok(item);
     }
 
+    [HttpPost("add-dto")]
+    [AuthorizeWithSid]
+    public async Task<IActionResult> AddDto([FromBody] ReceptionCreateDto dto)
+    {
+        // Получаем отделение
+        var department = await _repoDepartment.GetByIdAsync(dto.departmentId);
+        if (department == null)
+            return BadRequest(new { error = "Invalid department id" });
+
+        // Получаем сотрудников
+        var personnel = new List<Worker>();
+        foreach (var workerId in dto.personnelIds)
+        {
+            var worker = await _repoWorker.GetByIdAsync(workerId);
+            if (worker == null)
+                return BadRequest(new { error = $"Invalid worker id: {workerId}" });
+            personnel.Add(worker);
+        }
+
+        // Получаем требуемые должности
+        var requiredPersonnel = new List<JobTitle>();
+        foreach (var jobTitleId in dto.requiredPersonnelIds)
+        {
+            var jobTitle = await _repoJobTitle.GetByIdAsync(jobTitleId);
+            if (jobTitle == null)
+                return BadRequest(new { error = $"Invalid job title id: {jobTitleId}" });
+            requiredPersonnel.Add(jobTitle);
+        }
+
+        // Формируем новый приём
+        var reception = new Reception
+        {
+            date = dto.date,
+            startTime = dto.startTime,
+            time = dto.time,
+            department = department,
+            personnel = personnel,
+            requiredPersonnel = requiredPersonnel
+        };
+
+        await _repo.AddAsync(reception);
+        await _repo.SaveAsync();
+
+        return Ok(reception);
+    }
+
+
     [HttpPut("update/{id}")]
     [AuthorizeWithSid]
     public async Task<IActionResult> Update(int id, [FromBody] Reception updated)
@@ -124,6 +172,8 @@ public class ReceptionsController : ControllerBase
         existing.requiredPersonnel = updated.requiredPersonnel;
         existing.personnel = updated.personnel;
         existing.department = updated.department;
+        existing.date = updated.date;
+        existing.startTime = updated.startTime;
         if (existing.personnel != null)
         {
             for (int i = 0; i < existing.personnel.Count; i++)

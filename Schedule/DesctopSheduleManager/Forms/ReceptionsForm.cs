@@ -68,7 +68,7 @@ namespace DesctopSheduleManager
             if (selectedReception == null) return;
 
             // Заполняем данные
-            txtTime.Text = selectedReception.time.ToString(@"hh\:mm");
+            dateTimePickerTime.Value = DateTime.Today.Add(selectedReception.time);
             cmbDepartment.SelectedValue = selectedReception.department?.id;
 
             // Заполняем список должностей
@@ -117,9 +117,10 @@ namespace DesctopSheduleManager
         {
             try
             {
+                TimeSpan duration = dateTimePickerTime.Value.TimeOfDay;
                 var newReception = new Reception
                 {
-                    time = TimeSpan.Parse(txtTime.Text),
+                    time = duration,
                     department = new Department { id = (int)cmbDepartment.SelectedValue },
                     requiredPersonnel = _selectedJobTitles,
                 };
@@ -151,10 +152,11 @@ namespace DesctopSheduleManager
 
                 var id = (int)dataGridReceptions.CurrentRow.Cells["id"].Value;
 
+                TimeSpan duration = dateTimePickerTime.Value.TimeOfDay;
                 var updatedReception = new Reception
                 {
                     id = id,
-                    time = TimeSpan.Parse(txtTime.Text),
+                    time = duration,
                     department = new Department { id = (int)cmbDepartment.SelectedValue },
                     requiredPersonnel = _selectedJobTitles,
                     date = DateOnly.FromDateTime(dtpDate.Value)
