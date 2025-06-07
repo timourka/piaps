@@ -117,25 +117,43 @@ namespace DesctopSheduleManager
         {
             try
             {
-                TimeSpan duration = dateTimePickerTime.Value.TimeOfDay;
+                if (cmbDepartment.SelectedItem == null)
+                {
+                    MessageBox.Show("Пожалуйста, выберите отделение.");
+                    return;
+                }
+
+                if (_selectedJobTitles.Count == 0)
+                {
+                    MessageBox.Show("Пожалуйста, добавьте хотя бы одну требуемую должность.");
+                    return;
+                }
+
+                TimeSpan time = dateTimePickerTime.Value.TimeOfDay;
+                if (time == TimeSpan.Zero)
+                {
+                    MessageBox.Show("Пожалуйста, выберите корректное время.");
+                    return;
+                }
+
                 var newReception = new Reception
                 {
-                    time = duration,
+                    time = time,
                     department = new Department { id = (int)cmbDepartment.SelectedValue },
-                    requiredPersonnel = _selectedJobTitles,
+                    requiredPersonnel = _selectedJobTitles
                 };
 
                 var response = await _client.PostAsJsonAsync("api/reception/add", newReception);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Запрос успешен, обновим список
                     MessageBox.Show("Прием успешно добавлен.");
                     await LoadReceptionsAsync();
                 }
                 else
                 {
-                    MessageBox.Show($"Ошибка: {response.ReasonPhrase}");
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при добавлении: {response.ReasonPhrase}\n{error}");
                 }
             }
             catch (Exception ex)
@@ -148,15 +166,37 @@ namespace DesctopSheduleManager
         {
             try
             {
-                if (dataGridReceptions.CurrentRow == null) return;
+                if (dataGridReceptions.CurrentRow == null)
+                {
+                    MessageBox.Show("Выберите прием для обновления.");
+                    return;
+                }
 
                 var id = (int)dataGridReceptions.CurrentRow.Cells["id"].Value;
 
-                TimeSpan duration = dateTimePickerTime.Value.TimeOfDay;
+                if (cmbDepartment.SelectedItem == null)
+                {
+                    MessageBox.Show("Пожалуйста, выберите отделение.");
+                    return;
+                }
+
+                if (_selectedJobTitles.Count == 0)
+                {
+                    MessageBox.Show("Пожалуйста, добавьте хотя бы одну требуемую должность.");
+                    return;
+                }
+
+                TimeSpan time = dateTimePickerTime.Value.TimeOfDay;
+                if (time == TimeSpan.Zero)
+                {
+                    MessageBox.Show("Пожалуйста, выберите корректное время.");
+                    return;
+                }
+
                 var updatedReception = new Reception
                 {
                     id = id,
-                    time = duration,
+                    time = time,
                     department = new Department { id = (int)cmbDepartment.SelectedValue },
                     requiredPersonnel = _selectedJobTitles,
                     date = DateOnly.FromDateTime(dtpDate.Value)
@@ -171,7 +211,8 @@ namespace DesctopSheduleManager
                 }
                 else
                 {
-                    MessageBox.Show($"Ошибка: {response.ReasonPhrase}");
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при обновлении: {response.ReasonPhrase}\n{error}");
                 }
             }
             catch (Exception ex)
@@ -180,20 +221,40 @@ namespace DesctopSheduleManager
             }
         }
 
-        // Удаляем приём
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-            if (dataGridReceptions.CurrentRow == null) return;
-
-            var id = (int)dataGridReceptions.CurrentRow.Cells["id"].Value;
-
-            var result = MessageBox.Show("Удалить выбранный приём?", "Подтверждение", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            try
             {
-                await _client.DeleteAsync($"api/reception/delete/{id}");
-                await LoadReceptionsAsync(); // Обновляем список приёмов
+                if (dataGridReceptions.CurrentRow == null)
+                {
+                    MessageBox.Show("Выберите прием для удаления.");
+                    return;
+                }
+
+                var id = (int)dataGridReceptions.CurrentRow.Cells["id"].Value;
+
+                var result = MessageBox.Show("Удалить выбранный приём?", "Подтверждение", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    var response = await _client.DeleteAsync($"api/reception/delete/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await LoadReceptionsAsync();
+                        MessageBox.Show("Прием успешно удален.");
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Ошибка при удалении: {response.ReasonPhrase}\n{error}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка при удалении: {ex.Message}");
             }
         }
+
 
         // Обработчик события загрузки формы
         private async void ReceptionsForm_Load(object sender, EventArgs e)

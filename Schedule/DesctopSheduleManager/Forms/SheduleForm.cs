@@ -58,22 +58,26 @@ namespace DesctopSheduleManager.Forms
                         var day = allDays[i];
                         var cell = row.Cells[i + 1];
 
+                        bool isInteractive = false;
+
                         var weekday = (int)day.DayOfWeek;
-                        if (weekday == 0) weekday = 7; // Sunday = 7
+                        if (weekday == 0) weekday = 7;
 
                         // Праздники
                         if (holidays.Any(h => h.date == day))
                         {
                             cell.Style.BackColor = Color.LightCoral;
                             cell.Value = "Праздник";
+                            continue;
                         }
 
-                        // Отделение не работает
+                        // Отдел не работает
                         var depSchedule = departmentSchedule.ElementAtOrDefault(weekday - 1);
                         if (depSchedule == null || !depSchedule.isWorking)
                         {
                             cell.Style.BackColor = Color.Red;
                             cell.Value = "Выходной";
+                            continue;
                         }
 
                         // Отпуск
@@ -82,6 +86,7 @@ namespace DesctopSheduleManager.Forms
                             cell.Style.BackColor = Color.Black;
                             cell.Style.ForeColor = Color.White;
                             cell.Value = "Отпуск";
+                            continue;
                         }
 
                         // Личное расписание
@@ -94,26 +99,45 @@ namespace DesctopSheduleManager.Forms
                             {
                                 cell.Style.BackColor = Color.DarkRed;
                                 cell.Value = "Не работает";
+                                continue;
                             }
+
+                            // Рабочий день
+                            cell.Style.BackColor = Color.LightGreen;
+                            isInteractive = true;
                         }
 
-                        // Интерактив: двойной клик
-                        cell.Tag = new { day, worker };
+                        // Ячейка интерактивна только если день рабочий
+                        cell.Tag = new { day, worker, interactive = isInteractive };
                     }
                 }
 
+
+                // Обработчик двойного клика
                 dataGrid.CellDoubleClick += (s, args) =>
                 {
                     if (args.RowIndex >= 0 && args.ColumnIndex > 0)
                     {
-                        var dayStr = dataGrid.Columns[args.ColumnIndex].Name;
-                        var day = DateOnly.Parse(dayStr);
-                        var worker = workers[args.RowIndex];
+                        var cell = dataGrid.Rows[args.RowIndex].Cells[args.ColumnIndex];
+                        if (cell.Tag is not { } tagObj) return;
+
+                        var tagType = tagObj.GetType();
+                        var interactiveProp = tagType.GetProperty("interactive");
+                        if (interactiveProp == null || !(bool)interactiveProp.GetValue(tagObj)) return;
+
+                        var dayProp = tagType.GetProperty("day");
+                        var workerProp = tagType.GetProperty("worker");
+                        if (dayProp == null || workerProp == null) return;
+
+                        var day = (DateOnly)dayProp.GetValue(tagObj);
+                        var worker = (Worker)workerProp.GetValue(tagObj);
+
                         var workSchedule = worker.workSchedules.Count > 0
                             ? worker.workSchedules[day.DayNumber % worker.workSchedules.Count]
                             : null;
+
                         var weekday = (int)day.DayOfWeek;
-                        if (weekday == 0) weekday = 7; // Sunday = 7
+                        if (weekday == 0) weekday = 7;
                         var depSchedule = department.workSchedules[weekday - 1];
 
                         var view = new ViewReceptionsForm(department, day, worker, workSchedule, depSchedule);

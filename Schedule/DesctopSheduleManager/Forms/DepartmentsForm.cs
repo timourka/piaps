@@ -1,65 +1,125 @@
 ﻿using DesctopSheduleManager.Forms;
 using DesctopSheduleManager.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models;
 using System.Net.Http.Json;
+using System.Text.Json;
+
 
 namespace DesctopSheduleManager
 {
     public partial class DepartmentsForm : Form
     {
         private readonly HttpClient _client;
-        private List<Department> _departments = new List<Department>(); // Список департаментов
+        private List<Department> _departments = new();
+        private List<Worker> _allWorkers = new();
 
         public DepartmentsForm()
         {
             InitializeComponent();
-            _client = ApiClient.Instance; // Используем ваш ApiClient
+            _client = ApiClient.Instance;
         }
-
-        // Загружаем департаменты
-        private async Task LoadDepartmentsAsync()
+        private async Task LoadAllWorkersAsync()
         {
-            var departments = await _client.GetFromJsonAsync<List<Department>>("api/department/get-all");
-
-            if (departments != null)
+            try
             {
-                _departments = departments;
-
-                dataGridDepartments.DataSource = _departments.Select(d => new
-                {
-                    d.id,
-                    d.name,
-                    WorkersCount = d.workers.Count
-                }).ToList();
+                _allWorkers = await _client.GetFromJsonAsync<List<Worker>>("api/worker/get-all") ?? new();
+                comboBoxWorkers.DataSource = _allWorkers;
+                comboBoxWorkers.DisplayMember = "name";
+                comboBoxWorkers.ValueMember = "id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки персонала: {ex.Message}");
             }
         }
 
-        // Загружаем департамент по ID для редактирования
+
+        private async Task LoadDepartmentsAsync()
+        {
+            try
+            {
+                var departments = await _client.GetFromJsonAsync<List<Department>>("api/department/get-all");
+
+                if (departments != null)
+                {
+                    _departments = departments;
+                    dataGridDepartments.DataSource = _departments.Select(d => new
+                    {
+                        d.id,
+                        d.name,
+                        WorkersCount = d.workers?.Count ?? 0
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
+            }
+        }
+        private void LoadDepartmentWorkers()
+        {
+            if (dataGridDepartments.CurrentRow == null) return;
+
+            var selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            if (selectedDepartment == null) return;
+
+            var workers = selectedDepartment.workers ?? new List<Worker>();
+
+            dataGridViewWorkers.DataSource = workers.Select(w => new
+            {
+                w.id,
+                w.name,
+                Должность = w.jobTitle?.name
+            }).ToList();
+        }
+
         private void dataGridDepartments_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridDepartments.CurrentRow == null) return;
-
-            var selectedRow = dataGridDepartments.CurrentRow;
-
-            txtName.Text = selectedRow.Cells["name"].Value.ToString();
+            txtName.Text = dataGridDepartments.CurrentRow.Cells["name"].Value?.ToString();
+            LoadDepartmentWorkers(); // <-- обновляем работников
         }
 
-        // Добавляем новый департамент
+
         private async void btnAdd_Click(object sender, EventArgs e)
         {
-            var newDepartment = new Department
+            if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                name = txtName.Text
-            };
+                MessageBox.Show("Введите название отделения.");
+                return;
+            }
 
-            await _client.PostAsJsonAsync("api/department/add", newDepartment);
-            await LoadDepartmentsAsync(); // Обновляем список департаментов
+            var newDepartment = new Department { name = txtName.Text };
+
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/department/add", newDepartment);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadDepartmentsAsync();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка добавления: {response.StatusCode}\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к API: {ex.Message}");
+            }
         }
 
-        // Обновляем департамент
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
             if (dataGridDepartments.CurrentRow == null) return;
+
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Введите название отделения.");
+                return;
+            }
 
             var id = (int)dataGridDepartments.CurrentRow.Cells["id"].Value;
 
@@ -69,11 +129,25 @@ namespace DesctopSheduleManager
                 name = txtName.Text
             };
 
-            await _client.PutAsJsonAsync($"api/department/update/{id}", updatedDepartment);
-            await LoadDepartmentsAsync(); // Обновляем список департаментов
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/department/update/{id}", updatedDepartment);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadDepartmentsAsync();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка обновления: {response.StatusCode}\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к API: {ex.Message}");
+            }
         }
 
-        // Удаляем департамент
         private async void btnDelete_Click(object sender, EventArgs e)
         {
             if (dataGridDepartments.CurrentRow == null) return;
@@ -81,41 +155,63 @@ namespace DesctopSheduleManager
             var id = (int)dataGridDepartments.CurrentRow.Cells["id"].Value;
 
             var result = MessageBox.Show("Удалить выбранный департамент?", "Подтверждение", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            if (result != DialogResult.Yes) return;
+
+            try
             {
-                await _client.DeleteAsync($"api/department/delete/{id}");
-                await LoadDepartmentsAsync(); // Обновляем список департаментов
+                var response = await _client.DeleteAsync($"api/department/delete/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadDepartmentsAsync();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка удаления: {response.StatusCode}\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к API: {ex.Message}");
             }
         }
 
-        // Генерация расписания для департамента
         private async void btnGenerateSchedule_Click(object sender, EventArgs e)
         {
-            if (dataGridDepartments.CurrentRow == null) return;
+            if (dataGridDepartments.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите отделение.");
+                return;
+            }
 
             var id = (int)dataGridDepartments.CurrentRow.Cells["id"].Value;
+            var result = MessageBox.Show($"Сгенерировать расписание для отделения ID {id}?", "Подтверждение", MessageBoxButtons.YesNo);
 
-            var result = MessageBox.Show($"Вы уверены, что хотите сгенерировать расписание для департамента с ID {id}?",
-                "Подтверждение", MessageBoxButtons.YesNo);
+            if (result != DialogResult.Yes) return;
 
-            if (result == DialogResult.Yes)
+            try
             {
                 var response = await _client.PostAsync($"api/department/generate-schedule/{id}", null);
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Расписание для департамента успешно сгенерировано.", "Успех");
+                    MessageBox.Show("Расписание успешно сгенерировано.");
                 }
                 else
                 {
-                    MessageBox.Show("Ошибка при генерации расписания.", "Ошибка");
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка генерации: {response.StatusCode}\n{error}");
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к API: {ex.Message}");
             }
         }
 
-        // Обработчик события загрузки формы
         private async void DepartmentsForm_Load(object sender, EventArgs e)
         {
-            await LoadDepartmentsAsync(); // Загружаем департаменты
+            await LoadDepartmentsAsync();
+            await LoadAllWorkersAsync();
         }
 
         private async void buttonChangeShedule_Click(object sender, EventArgs e)
@@ -126,7 +222,7 @@ namespace DesctopSheduleManager
                 return;
             }
 
-            Department selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            var selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
             if (selectedDepartment == null)
             {
                 MessageBox.Show("Не удалось получить отделение.");
@@ -138,8 +234,6 @@ namespace DesctopSheduleManager
             if (editorForm.ShowDialog() == DialogResult.OK)
             {
                 var updatedSchedule = editorForm.UpdatedSchedule;
-
-                // Установим DepartmentId каждому элементу расписания
                 foreach (var ws in updatedSchedule)
                 {
                     if (ws != null)
@@ -165,7 +259,7 @@ namespace DesctopSheduleManager
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при подключении к API:\n{ex.Message}");
+                    MessageBox.Show($"Ошибка подключения к API:\n{ex.Message}");
                 }
             }
         }
@@ -178,7 +272,7 @@ namespace DesctopSheduleManager
                 return;
             }
 
-            Department selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            var selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
             if (selectedDepartment == null)
             {
                 MessageBox.Show("Не удалось получить отделение.");
@@ -186,8 +280,62 @@ namespace DesctopSheduleManager
             }
 
             var sheduleForm = new SheduleForm(selectedDepartment.id);
-
             sheduleForm.ShowDialog();
         }
+        private async void buttonAddWorker_Click(object sender, EventArgs e)
+        {
+            if (dataGridDepartments.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите отделение.");
+                return;
+            }
+
+            var selectedDepartment = _departments[dataGridDepartments.CurrentRow.Index];
+            if (selectedDepartment == null)
+            {
+                MessageBox.Show("Не удалось получить отделение.");
+                return;
+            }
+
+            var selectedWorker = comboBoxWorkers.SelectedItem as Worker;
+            if (selectedWorker == null)
+            {
+                MessageBox.Show("Выберите работника для добавления.");
+                return;
+            }
+
+            // Проверим, не добавлен ли уже
+            if (selectedDepartment.workers?.Any(w => w.id == selectedWorker.id) == true)
+            {
+                MessageBox.Show("Работник уже добавлен в это отделение.");
+                return;
+            }
+
+            selectedDepartment.workers ??= new List<Worker>();
+            selectedDepartment.workers.Add(selectedWorker);
+
+            try
+            {
+                var response = await _client.PutAsJsonAsync(
+                    $"api/department/update/{selectedDepartment.id}", selectedDepartment);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Работник добавлен в отделение.");
+                    await LoadDepartmentsAsync(); // перезагружаем отделения с обновленными данными
+                    LoadDepartmentWorkers(); // обновляем отображение
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка обновления: {response.StatusCode}\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения к API: {ex.Message}");
+            }
+        }
+
     }
 }

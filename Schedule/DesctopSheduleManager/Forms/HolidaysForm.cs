@@ -1,18 +1,12 @@
 ﻿using DesctopSheduleManager.Utilities;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net.Http.Json;
 
 namespace DesctopSheduleManager
 {
     public partial class HolidaysForm : Form
     {
-
         private readonly HttpClient _client;
         private List<Holiday> _holidays = new();
 
@@ -29,15 +23,21 @@ namespace DesctopSheduleManager
 
         private async Task LoadHolidaysAsync()
         {
-            _holidays = await _client.GetFromJsonAsync<List<Holiday>>("api/holiday/get-all");
-            dataGridHolidays.DataSource = _holidays.Select(h => new
+            try
             {
-                h.id,
-                h.name,
-                date = h.date.ToString("yyyy-MM-dd")
-            }).ToList();
-
-            ClearInputs();
+                _holidays = await _client.GetFromJsonAsync<List<Holiday>>("api/holiday/get-all") ?? new();
+                dataGridHolidays.DataSource = _holidays.Select(h => new
+                {
+                    h.id,
+                    h.name,
+                    date = h.date.ToString("yyyy-MM-dd")
+                }).ToList();
+                ClearInputs();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки праздников: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ClearInputs()
@@ -49,6 +49,7 @@ namespace DesctopSheduleManager
         private void dataGridHolidays_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridHolidays.CurrentRow == null || dataGridHolidays.CurrentRow.Index < 0) return;
+
             int index = dataGridHolidays.CurrentRow.Index;
             if (index >= _holidays.Count) return;
 
@@ -59,48 +60,117 @@ namespace DesctopSheduleManager
 
         private async void btnAdd_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Название праздника не может быть пустым.", "Валидация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var holiday = new Holiday
             {
-                name = txtName.Text,
+                name = txtName.Text.Trim(),
                 date = DateOnly.FromDateTime(dtpDate.Value)
             };
 
-            await _client.PostAsJsonAsync("api/holiday/add", holiday);
-            await LoadHolidaysAsync();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/holiday/add", holiday);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadHolidaysAsync();
+                    MessageBox.Show("Праздник успешно добавлен.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при добавлении: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения: {ex.Message}", "Сетевая ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (dataGridHolidays.CurrentRow == null) return;
+            if (dataGridHolidays.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите праздник для обновления.");
+                return;
+            }
+
             int index = dataGridHolidays.CurrentRow.Index;
             if (index >= _holidays.Count) return;
+
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Название праздника не может быть пустым.", "Валидация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             var id = _holidays[index].id;
 
             var updatedHoliday = new Holiday
             {
                 id = id,
-                name = txtName.Text,
+                name = txtName.Text.Trim(),
                 date = DateOnly.FromDateTime(dtpDate.Value)
             };
 
-            await _client.PutAsJsonAsync($"api/holiday/update/{id}", updatedHoliday);
-            await LoadHolidaysAsync();
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/holiday/update/{id}", updatedHoliday);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadHolidaysAsync();
+                    MessageBox.Show("Праздник обновлён.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при обновлении: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения: {ex.Message}", "Сетевая ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-            if (dataGridHolidays.CurrentRow == null) return;
+            if (dataGridHolidays.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите праздник для удаления.");
+                return;
+            }
+
             int index = dataGridHolidays.CurrentRow.Index;
             if (index >= _holidays.Count) return;
 
             var id = _holidays[index].id;
 
-            var result = MessageBox.Show("Удалить выбранный праздник?", "Подтверждение", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            var confirm = MessageBox.Show("Удалить выбранный праздник?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
+
+            try
             {
-                await _client.DeleteAsync($"api/holiday/delete/{id}");
-                await LoadHolidaysAsync();
+                var response = await _client.DeleteAsync($"api/holiday/delete/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadHolidaysAsync();
+                    MessageBox.Show("Праздник удалён.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при удалении: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения: {ex.Message}", "Сетевая ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

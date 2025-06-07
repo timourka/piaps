@@ -57,6 +57,7 @@
             buttonNotificationTest = new Button();
             buttonChangeShedule = new Button();
             buttonChangeVacations = new Button();
+            checkBoxShowPass = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridWorkers).BeginInit();
             SuspendLayout();
             // 
@@ -78,7 +79,7 @@
             // 
             txtPassword.Location = new Point(120, 100);
             txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(200, 23);
+            txtPassword.Size = new Size(179, 23);
             txtPassword.TabIndex = 2;
             // 
             // cmbJobTitle
@@ -112,7 +113,7 @@
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(100, 30);
             btnUpdate.TabIndex = 6;
-            btnUpdate.Text = "Обновить";
+            btnUpdate.Text = "Изменить";
             btnUpdate.Click += btnUpdate_Click;
             // 
             // btnDelete
@@ -195,9 +196,20 @@
             buttonChangeVacations.UseVisualStyleBackColor = true;
             buttonChangeVacations.Click += buttonChangeVacations_Click;
             // 
+            // checkBoxShowPass
+            // 
+            checkBoxShowPass.AutoSize = true;
+            checkBoxShowPass.Location = new Point(305, 104);
+            checkBoxShowPass.Name = "checkBoxShowPass";
+            checkBoxShowPass.Size = new Size(15, 14);
+            checkBoxShowPass.TabIndex = 16;
+            checkBoxShowPass.UseVisualStyleBackColor = true;
+            checkBoxShowPass.CheckedChanged += checkBoxShowPass_CheckedChanged;
+            // 
             // WorkersForm
             // 
             ClientSize = new Size(550, 450);
+            Controls.Add(checkBoxShowPass);
             Controls.Add(buttonChangeVacations);
             Controls.Add(buttonChangeShedule);
             Controls.Add(buttonNotificationTest);
@@ -227,5 +239,6 @@
         private Button buttonNotificationTest;
         private Button buttonChangeShedule;
         private Button buttonChangeVacations;
+        private CheckBox checkBoxShowPass;
     }
 }

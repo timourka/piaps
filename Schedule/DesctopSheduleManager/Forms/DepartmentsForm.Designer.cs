@@ -43,7 +43,11 @@ namespace DesctopSheduleManager
             btnGenerateSchedule = new Button();
             buttonChangeShedule = new Button();
             buttonShedule = new Button();
+            dataGridViewWorkers = new DataGridView();
+            buttonAddWorker = new Button();
+            comboBoxWorkers = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridDepartments).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewWorkers).BeginInit();
             SuspendLayout();
             // 
             // dataGridDepartments
@@ -126,9 +130,38 @@ namespace DesctopSheduleManager
             buttonShedule.UseVisualStyleBackColor = true;
             buttonShedule.Click += buttonShedule_Click;
             // 
+            // dataGridViewWorkers
+            // 
+            dataGridViewWorkers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewWorkers.Location = new Point(12, 287);
+            dataGridViewWorkers.Name = "dataGridViewWorkers";
+            dataGridViewWorkers.Size = new Size(200, 126);
+            dataGridViewWorkers.TabIndex = 8;
+            // 
+            // buttonAddWorker
+            // 
+            buttonAddWorker.Location = new Point(220, 316);
+            buttonAddWorker.Name = "buttonAddWorker";
+            buttonAddWorker.Size = new Size(157, 23);
+            buttonAddWorker.TabIndex = 9;
+            buttonAddWorker.Text = "добавить работника";
+            buttonAddWorker.UseVisualStyleBackColor = true;
+            buttonAddWorker.Click += buttonAddWorker_Click;
+            // 
+            // comboBoxWorkers
+            // 
+            comboBoxWorkers.FormattingEnabled = true;
+            comboBoxWorkers.Location = new Point(220, 287);
+            comboBoxWorkers.Name = "comboBoxWorkers";
+            comboBoxWorkers.Size = new Size(157, 23);
+            comboBoxWorkers.TabIndex = 10;
+            // 
             // DepartmentsForm
             // 
-            ClientSize = new Size(783, 300);
+            ClientSize = new Size(783, 425);
+            Controls.Add(comboBoxWorkers);
+            Controls.Add(buttonAddWorker);
+            Controls.Add(dataGridViewWorkers);
             Controls.Add(buttonShedule);
             Controls.Add(buttonChangeShedule);
             Controls.Add(dataGridDepartments);
@@ -141,6 +174,7 @@ namespace DesctopSheduleManager
             Text = "Департаменты";
             Load += DepartmentsForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridDepartments).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewWorkers).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -149,5 +183,8 @@ namespace DesctopSheduleManager
 
         private Button buttonChangeShedule;
         private Button buttonShedule;
+        private DataGridView dataGridViewWorkers;
+        private Button buttonAddWorker;
+        private ComboBox comboBoxWorkers;
     }
 }

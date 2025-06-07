@@ -11,6 +11,6 @@ namespace Models
         public bool isWorking { get; set; }
 
         public int DepartmentId { get; set; }            // 🔥 Добавлено
-        [JsonIgnore] public Department Department { get; set; }       // 🔥 Добавлено
+        [JsonIgnore] public Department? Department { get; set; }       // 🔥 Добавлено
     }
 }

@@ -14,24 +14,30 @@ namespace DesctopSheduleManager
         {
             InitializeComponent();
             _client = ApiClient.Instance;
+            txtPassword.UseSystemPasswordChar = true;
         }
 
         // Загружаем список должностей
         private async Task LoadJobTitlesAsync()
         {
-            // Получаем все должности с API
-            var jobTitles = await _client.GetFromJsonAsync<List<JobTitle>>("api/job-title/get-all");
-
-            if (jobTitles != null)
+            try
             {
-                _jobTitles = jobTitles;
+                var jobTitles = await _client.GetFromJsonAsync<List<JobTitle>>("api/job-title/get-all");
 
-                // Заполняем ComboBox объектами JobTitle
-                cmbJobTitle.DataSource = _jobTitles;
-                cmbJobTitle.DisplayMember = "name"; // Показываем название должности
-                cmbJobTitle.ValueMember = "id"; // Сохраняем ID должности
+                if (jobTitles != null)
+                {
+                    _jobTitles = jobTitles;
+                    cmbJobTitle.DataSource = _jobTitles;
+                    cmbJobTitle.DisplayMember = "name";
+                    cmbJobTitle.ValueMember = "id";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки должностей:\n{ex.Message}");
             }
         }
+
 
         // Вызываем загрузку данных при загрузке формы
         private async void WorkersForm_Load(object sender, EventArgs e)
@@ -42,77 +48,157 @@ namespace DesctopSheduleManager
 
         private async Task LoadWorkersAsync()
         {
-            // Загружаем список работников
-            var workers = await _client.GetFromJsonAsync<List<Worker>>("api/worker/get-all");
-
-            dataGridWorkers.DataSource = workers?.Select(w => new
+            try
             {
-                w.id,
-                w.name,
-                w.login,
-                JobTitle = w.jobTitle?.name // Показываем название должности
-            }).ToList();
+                var workers = await _client.GetFromJsonAsync<List<Worker>>("api/worker/get-all");
+
+                if (workers != null)
+                {
+                    dataGridWorkers.DataSource = workers.Select(w => new
+                    {
+                        w.id,
+                        w.name,
+                        w.login,
+                        JobTitle = w.jobTitle?.name
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки сотрудников:\n{ex.Message}");
+            }
         }
+
 
         // Обработчик добавления нового сотрудника
         private async void btnAdd_Click(object sender, EventArgs e)
         {
-            var selectedJobTitle = (JobTitle)cmbJobTitle.SelectedItem; // Получаем выбранную должность
-            if (selectedJobTitle == null) return;
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                string.IsNullOrWhiteSpace(txtLogin.Text) ||
+                string.IsNullOrWhiteSpace(txtPassword.Text) ||
+                cmbJobTitle.SelectedItem == null)
+            {
+                MessageBox.Show("Пожалуйста, заполните все поля и выберите должность.");
+                return;
+            }
+
+            var selectedJobTitle = (JobTitle)cmbJobTitle.SelectedItem;
 
             var newWorker = new Worker
             {
-                name = txtName.Text,
-                login = txtLogin.Text,
+                name = txtName.Text.Trim(),
+                login = txtLogin.Text.Trim(),
                 password = txtPassword.Text,
-                jobTitle = selectedJobTitle // Используем объект JobTitle с id
+                jobTitle = selectedJobTitle,
+                workSchedules = new()
             };
 
-            // Отправляем POST запрос на добавление нового работника
-            await _client.PostAsJsonAsync("api/worker/add", newWorker);
-            await LoadWorkersAsync(); // Обновляем список работников
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/worker/add", newWorker);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadWorkersAsync();
+                    MessageBox.Show("Сотрудник успешно добавлен.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при добавлении:\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка:\n{ex.Message}");
+            }
         }
+
 
         // Обработчик обновления сотрудника
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (dataGridWorkers.CurrentRow == null) return;
-            int index = dataGridWorkers.CurrentRow.Index;
-            if (index < 0) return;
+            if (dataGridWorkers.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите сотрудника для обновления.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                string.IsNullOrWhiteSpace(txtLogin.Text) ||
+                string.IsNullOrWhiteSpace(txtPassword.Text) ||
+                cmbJobTitle.SelectedItem == null)
+            {
+                MessageBox.Show("Пожалуйста, заполните все поля и выберите должность.");
+                return;
+            }
 
             var id = (int)dataGridWorkers.CurrentRow.Cells["id"].Value;
             var selectedJobTitle = (JobTitle)cmbJobTitle.SelectedItem;
 
-            if (selectedJobTitle == null) return;
-
             var updatedWorker = new Worker
             {
                 id = id,
-                name = txtName.Text,
-                login = txtLogin.Text,
+                name = txtName.Text.Trim(),
+                login = txtLogin.Text.Trim(),
                 password = txtPassword.Text,
                 jobTitle = selectedJobTitle
             };
 
-            // Отправляем PUT запрос на обновление данных сотрудника
-            await _client.PutAsJsonAsync($"api/worker/update/{id}", updatedWorker);
-            await LoadWorkersAsync(); // Обновляем список работников
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/worker/update/{id}", updatedWorker);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadWorkersAsync();
+                    MessageBox.Show("Сотрудник успешно обновлён.");
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка при обновлении:\n{error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка:\n{ex.Message}");
+            }
         }
+
 
         // Обработчик удаления сотрудника
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-            if (dataGridWorkers.CurrentRow == null) return;
+            if (dataGridWorkers.CurrentRow == null)
+            {
+                MessageBox.Show("Выберите сотрудника для удаления.");
+                return;
+            }
 
             var id = (int)dataGridWorkers.CurrentRow.Cells["id"].Value;
 
-            var result = MessageBox.Show("Удалить выбранного сотрудника?", "Подтверждение", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            if (MessageBox.Show("Удалить выбранного сотрудника?", "Подтверждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                await _client.DeleteAsync($"api/worker/delete/{id}");
-                await LoadWorkersAsync(); // Обновляем список работников
+                try
+                {
+                    var response = await _client.DeleteAsync($"api/worker/delete/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        await LoadWorkersAsync();
+                        MessageBox.Show("Сотрудник удалён.");
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Ошибка при удалении:\n{error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Произошла ошибка:\n{ex.Message}");
+                }
             }
         }
+
 
         // Обработчик выбора строки в DataGridView
         private void dataGridWorkers_SelectionChanged(object sender, EventArgs e)
@@ -234,6 +320,11 @@ namespace DesctopSheduleManager
                     MessageBox.Show($"❌ Ошибка при обновлении:\n{error}");
                 }
             }
+        }
+
+        private void checkBoxShowPass_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPassword.UseSystemPasswordChar = !checkBoxShowPass.Checked;
         }
     }
 }
