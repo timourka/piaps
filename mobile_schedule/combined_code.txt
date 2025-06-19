@@ -1,0 +1,291 @@
+// ==== D:\piaps\mobile_schedule\lib\main.dart ====
+import 'package:flutter/material.dart';
+import 'package:mobile_schedule/screens/login_screen.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Schedule App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LoginScreen(),
+    );
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\lib\models\auth_model.dart ====
+class LoginRequest {
+  String login;
+  String password;
+
+  LoginRequest({required this.login, required this.password});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Login': login,
+      'Password': password,
+    };
+  }
+}
+
+class LoginResponse {
+  String sid;
+
+  LoginResponse({required this.sid});
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      sid: json['sid'],
+    );
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\lib\models\reception_model.dart ====
+class Reception {
+  int id;
+  String date;
+  String startTime;
+  String endTime;
+  String departmentName;
+  String time;
+
+  Reception({
+    required this.id,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+    required this.departmentName,
+    required this.time,
+  });
+
+  factory Reception.fromJson(Map<String, dynamic> json) {
+    return Reception(
+      id: json['id'],
+      date: json['date'],
+      startTime: json['startTime'],
+      endTime: json['endTime'],
+      departmentName: json['department']['name'],
+      time: json['time'],
+    );
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\lib\screens\login_screen.dart ====
+import 'package:flutter/material.dart';
+import 'package:mobile_schedule/screens/reception_screen.dart';
+
+import '../services/api_service.dart';
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _apiService = ApiService();
+  String? _errorMessage;
+
+  void _login() async {
+    try {
+      final loginResponse = await _apiService.login(
+        _loginController.text,
+        _passwordController.text,
+      );
+      // Переход на экран расписания
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReceptionScreen(sid: loginResponse.sid, login: _loginController.text),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Login')),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _loginController,
+              decoration: InputDecoration(labelText: 'Login'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _login,
+              child: Text('Login'),
+            ),
+            if (_errorMessage != null) ...[
+              SizedBox(height: 20),
+              Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\lib\screens\reception_screen.dart ====
+import 'package:flutter/material.dart';
+
+import '../models/reception_model.dart';
+import '../services/api_service.dart';
+
+class ReceptionScreen extends StatefulWidget {
+  final String sid;
+  final String login;
+
+  ReceptionScreen({required this.sid, required this.login});
+
+  @override
+  _ReceptionScreenState createState() => _ReceptionScreenState();
+}
+
+class _ReceptionScreenState extends State<ReceptionScreen> {
+  final _apiService = ApiService();
+  List<Reception> _receptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReceptions();
+  }
+
+  void _loadReceptions() async {
+    try {
+      final receptions = await _apiService.getReceptions(widget.sid, widget.login);
+      setState(() {
+        _receptions = receptions;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to load receptions')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Schedule')),
+      body: ListView.builder(
+        itemCount: _receptions.length,
+        itemBuilder: (context, index) {
+          final reception = _receptions[index];
+          return ListTile(
+            title: Text(reception.date),
+            subtitle: Text('Start: ${reception.startTime} - End: ${reception.endTime}'),
+            trailing: Text(reception.departmentName),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\lib\services\api_service.dart ====
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import '../models/auth_model.dart';
+import '../models/reception_model.dart';
+
+class ApiService {
+  static const String baseUrl = 'http://10.0.2.2:5270/api/';
+
+  Future<LoginResponse> login(String login, String password) async {
+    final url = Uri.parse('${baseUrl}auth/login');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(LoginRequest(login: login, password: password).toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return LoginResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to login');
+    }
+  }
+
+  Future<List<Reception>> getReceptions(String sid, String login) async {
+    final url = Uri.parse('${baseUrl}reception/getByLogin/$login');
+    final response = await http.get(
+      url,
+      headers: {'sid': sid},
+    );
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      return data.map((reception) => Reception.fromJson(reception)).toList();
+    } else {
+      throw Exception('Failed to load receptions');
+    }
+  }
+}
+
+
+
+// ==== D:\piaps\mobile_schedule\test\widget_test.dart ====
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility in the flutter_test package. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:mobile_schedule/main.dart';
+
+void main() {
+  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
+
+    // Verify that our counter starts at 0.
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
+
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
+  });
+}
+
+
+

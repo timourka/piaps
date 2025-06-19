@@ -1,0 +1,921 @@
+// ==== D:\piaps\generated\GeneratedSolution\Api\Program.cs ====
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\Controllers\ведение_должностей.cs ====
+using Microsoft.AspNetCore.Mvc;
+using System;
+
+namespace Api
+{
+    [ApiController]
+    [Route("api/dol")]
+    public class _ : ControllerBase  {
+
+        [HttpGet("get-all")]
+        public Models.Models.[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("get/{id}")]
+        public Models.Models. Read(int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPost("add")]
+        public void Create([FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPut("update/{id}")]
+        public void Update(int id, [FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpDelete("delete/{id}")]
+        public void Delete(int id) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private repositories.Repository Repository;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\Controllers\ведение_отделений.cs ====
+using Microsoft.AspNetCore.Mvc;
+using System;
+
+namespace Api
+{
+    [ApiController]
+    [Route("api/otd")]
+    public class _ : ControllerBase
+    {
+        [HttpGet("get-all")]
+        public Models.Models.[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("get/{id}")]
+        public Models.Models. Read(int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPost("add")]
+        public void Create([FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPut("update/{id}")]
+        public void Update(int id, [FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpDelete("delete/{id}")]
+        public void Delete(int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("createrasp/{id}")]
+        public void (int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("rasp/{id}")]
+        public void (int id, DateOnly , DateOnly ) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private repositories.Repository Repository;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\Controllers\ведение_персонала.cs ====
+using Microsoft.AspNetCore.Mvc;
+using System;
+
+namespace Api
+{
+    [ApiController]
+    [Route("api/per")]
+    public class _ : ControllerBase
+    {
+        [HttpGet("get-all")]
+        public Models.Models.[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPost("add")]
+        public void Create([FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPut("update/{id}")]
+        public void Update(int id, [FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("get/{id}")]
+        public Models.Models. Read( int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpDelete("delete/{id}")]
+        public void Delete( int id) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public string ( string ,  string login) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private repositories.Repository Repository;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\Controllers\ведение_праздников.cs ====
+using Microsoft.AspNetCore.Mvc;
+using System;
+
+namespace Api
+{
+    [ApiController]
+    [Route("api/pra")]
+    public class _ : ControllerBase
+    {
+        [HttpGet("get-all")]
+        public Models.Models.[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("get/{id}")]
+        public Models.Models. Read(  int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPost("add")]
+        public void Create([FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPut("update/{id}")]
+        public void Update( int id, [FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpDelete("delete/{id}")]
+        public void Delete( int id) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private repositories.Repository Repository;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\Controllers\ведение_приёмов.cs ====
+using Microsoft.AspNetCore.Mvc;
+using System;
+
+namespace Api
+{
+    [ApiController]
+    [Route("api/pri")]
+    public class _ : ControllerBase
+    {
+        [HttpGet("get-all")]
+        public Models.Models.[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPost("add")]
+        public void Create([FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpPut("update/{id}")]
+        public void Update(int id, [FromBody] Models.Models. ) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpGet("get/{id}")]
+        public Models.Models. Read(int id) {
+			throw new System.NotImplementedException("Not implemented");
+        }
+        [HttpDelete("delete/{id}")]
+        public void Delete(int id) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private repositories.Repository Repository;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs ====
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\obj\Debug\net8.0\Api.AssemblyInfo.cs ====
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("Api")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("Api")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Api")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Создано классом WriteCodeFragment MSBuild.
+
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Api\obj\Debug\net8.0\Api.GlobalUsings.g.cs ====
+// <auto-generated/>
+global using global::Microsoft.AspNetCore.Builder;
+global using global::Microsoft.AspNetCore.Hosting;
+global using global::Microsoft.AspNetCore.Http;
+global using global::Microsoft.AspNetCore.Routing;
+global using global::Microsoft.Extensions.Configuration;
+global using global::Microsoft.Extensions.DependencyInjection;
+global using global::Microsoft.Extensions.Hosting;
+global using global::Microsoft.Extensions.Logging;
+global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net.Http;
+global using global::System.Net.Http.Json;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Loger\логер.cs ====
+using System;
+
+public class  {
+	public void Debag(ref string text) {
+		throw new System.NotImplementedException("Not implemented");
+	}
+	public void Info(ref string text) {
+		throw new System.NotImplementedException("Not implemented");
+	}
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Loger\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs ====
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Loger\obj\Debug\net8.0\Loger.AssemblyInfo.cs ====
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("Loger")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("Loger")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Loger")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Создано классом WriteCodeFragment MSBuild.
+
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Loger\obj\Debug\net8.0\Loger.GlobalUsings.g.cs ====
+// <auto-generated/>
+global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net.Http;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\model.cs ====
+using System;
+
+namespace Models {
+	public interface Model {
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\выходной.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : _
+    {
+        public DateOnly ;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\выходной_день.cs ====
+using System;
+
+namespace Models.Models
+{
+    public interface _ : Model
+    {
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\график_работы_на_день.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class ___ : Model
+    {
+        private TimeOnly _;
+        private TimeOnly _;
+        private bool ;
+        public int id;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\должность.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class 
+    {
+        private string name;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\отделение.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : Model
+    {
+        private [] ;
+        private ___[] _;
+        public int id;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\отпуск.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : Model
+    {
+        private [] ;
+        public int id;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\праздник.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : _
+    {
+        private string ;
+        public DateOnly ;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\приём.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : Model
+    {
+        private DateOnly ;
+        private [] _;
+        private [] ;
+        private  ;
+        public int id;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\рабочий.cs ====
+using System;
+
+namespace Models.Models
+{
+    public class  : Model
+    {
+        private  ;
+        private  ;
+        private [] _;
+        private string ;
+        private [] ;
+        private string ;
+        private string login;
+        public int id;
+
+    }
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs ====
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\obj\Debug\net8.0\Models.AssemblyInfo.cs ====
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("Models")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("Models")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Models")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Создано классом WriteCodeFragment MSBuild.
+
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\Models\obj\Debug\net8.0\Models.GlobalUsings.g.cs ====
+// <auto-generated/>
+global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net.Http;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\repository.cs ====
+using System;
+
+namespace repositories {
+	public interface Repository {
+		void Create(ref Models.Model object_);
+		Models.Model[] Read();
+		void Update(ref Models.Model objectBefore, ref Models.Model objectAfter);
+		void Delete(ref Models.Model object_);
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\должностьRepository.cs ====
+using System;
+
+namespace repositories {
+	public class Repository : Repository  {
+		public void Delete(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Update(ref Models.Model objectBefore, ref Models.Model objectAfter) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public Models.Model[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Create(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private Models.Models. ;
+		private  ;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\отделениеRepository.cs ====
+using System;
+
+namespace repositories {
+	public class Repository : Repository  {
+		public void Delete(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Update(ref Models.Model objectBefore, ref Models.Model objectAfter) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public Models.Model[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Create(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private Models.Models. ;
+		private  ;
+
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\праздникRepository.cs ====
+using System;
+
+namespace repositories {
+	public class Repository : Repository  {
+		public void Delete(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Update(ref Models.Model objectBefore, ref Models.Model objectAfter) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public Models.Model[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Create(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private Models.Models. ;
+		private  ;
+
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\приёмRepository.cs ====
+using System;
+
+namespace repositories {
+	public class Repository : Repository  {
+		public void Delete(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Update(ref Models.Model objectBefore, ref Models.Model objectAfter) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public Models.Model[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Create(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private Models.Models. ;
+		private  ;
+
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\рабочийRepository.cs ====
+using System;
+
+namespace repositories {
+	public class Repository : Repository  {
+		public void Delete(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Update(ref Models.Model objectBefore, ref Models.Model objectAfter) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public Models.Model[] Read() {
+			throw new System.NotImplementedException("Not implemented");
+		}
+		public void Create(ref Models.Model object_) {
+			throw new System.NotImplementedException("Not implemented");
+		}
+
+		private Models.Models. ;
+		private  ;
+
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs ====
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\obj\Debug\net8.0\repositories.AssemblyInfo.cs ====
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("repositories")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("repositories")]
+[assembly: System.Reflection.AssemblyTitleAttribute("repositories")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Создано классом WriteCodeFragment MSBuild.
+
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\repositories\obj\Debug\net8.0\repositories.GlobalUsings.g.cs ====
+// <auto-generated/>
+global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net.Http;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\Program.cs ====
+namespace приложение_десктоп
+{
+    internal static class Program
+    {
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+            Application.Run(new ФормаАутентификации());
+        }
+    }
+}
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаАутентификации.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+		private string sid;
+
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаОтчётов.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаУправленияДолжностями.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаУправленияОтделениями.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаУправленияПерсоналом.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаУправленияПраздниками.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\формаУправленияПриёмами.cs ====
+using System;
+
+namespace _ {
+	public class  : Form  {
+	}
+
+}
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\obj\Debug\net8.0-windows\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs ====
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\obj\Debug\net8.0-windows\приложение десктоп.AssemblyInfo.cs ====
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Этот код создан программой.
+//     Исполняемая версия:4.0.30319.42000
+//
+//     Изменения в этом файле могут привести к неправильной работе и будут потеряны в случае
+//     повторной генерации кода.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("приложение десктоп")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("приложение десктоп")]
+[assembly: System.Reflection.AssemblyTitleAttribute("приложение десктоп")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+
+// Создано классом WriteCodeFragment MSBuild.
+
+
+
+
+// ==== D:\piaps\generated\GeneratedSolution\приложение десктоп\obj\Debug\net8.0-windows\приложение десктоп.GlobalUsings.g.cs ====
+// <auto-generated/>
+global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.Drawing;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net.Http;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
+global using global::System.Windows.Forms;
+
+
+
